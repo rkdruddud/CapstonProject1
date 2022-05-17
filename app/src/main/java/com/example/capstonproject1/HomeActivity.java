@@ -24,7 +24,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_home);
 
         fragmentManager = getFragmentManager();
-        mapFragment = (MapFragment)fragmentManager.findFragmentById(R.id.nav_home);
+        mapFragment = (MapFragment)fragmentManager.findFragmentById(R.id.nav_home_fragment);
         mapFragment.getMapAsync(this);
     }
     @Override

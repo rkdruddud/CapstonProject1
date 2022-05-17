@@ -70,7 +70,7 @@ public class MainScreenActivity extends AppCompatActivity  {
                     case R.id.nav_home:
                         getSupportFragmentManager().beginTransaction().replace(androidx.fragment.R.id.fragment_container_view_tag,
                                 new HomeFragment()).commit();
-                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         break;
                     case R.id.nav_tag_add:
                         startActivity(new Intent(getApplicationContext(), RegisterTagActivity.class));

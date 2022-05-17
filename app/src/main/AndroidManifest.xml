@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CapstonProject1">
         <activity
+            android:name=".ui.TagActivity"
+            android:exported="false" />
+        <activity
             android:name=".SearchSharePersonActivity"
             android:exported="false" />
         <activity

@@ -6,10 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
-<fragment
-    android:id="@+id/nav_home_fragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    class="com.google.android.gms.maps.MapFragment"/>
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+  <fragment
+      android:id="@+id/nav_home_fragment"
+      class="com.google.android.gms.maps.MapFragment"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
