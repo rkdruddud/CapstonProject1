@@ -21,11 +21,6 @@ public class PersonalTagActivity extends AppCompatActivity {
         registerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent outIntent = new Intent(getApplicationContext(),RegisterTagActivity.class);
-
-               outIntent.putExtra("TagName",tagname.getText().toString());
-               startActivityForResult(outIntent, 0);
-
                 Intent rintent = new Intent(PersonalTagActivity.this, TagListActivity.class);
                 PersonalTagActivity.this.startActivity(rintent);
                 finish();
