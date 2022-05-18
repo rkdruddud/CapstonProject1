@@ -37,6 +37,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ListView
+        android:id="@+id/taglistView"
         android:layout_width="409dp"
         android:layout_height="625dp"
         android:layout_marginTop="1dp"
