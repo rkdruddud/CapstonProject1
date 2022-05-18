@@ -1,10 +1,8 @@
-package com.example.capstonproject1.ui;
+package com.example.capstonproject1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-
-import com.example.capstonproject1.R;
 
 public class TagActivity extends AppCompatActivity {
 

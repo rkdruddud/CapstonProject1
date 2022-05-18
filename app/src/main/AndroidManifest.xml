@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.capstonproject1">
+    package="com.example.capstonproject1" >
 
     <application
         android:allowBackup="true"
@@ -8,9 +8,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CapstonProject1">
+        android:theme="@style/Theme.CapstonProject1" >
         <activity
-            android:name=".ui.TagActivity"
+            android:name=".TagActivity"
             android:exported="false" />
         <activity
             android:name=".SearchSharePersonActivity"
@@ -62,7 +62,7 @@
             android:theme="@style/Theme.CapstonProject1.NoActionBar" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
