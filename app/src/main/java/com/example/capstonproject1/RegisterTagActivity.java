@@ -8,7 +8,8 @@ import android.view.View;
 import android.widget.Button;
 
 public class RegisterTagActivity extends AppCompatActivity {
-
+    private int num1 = 0;
+    private int num2 = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,9 +18,13 @@ public class RegisterTagActivity extends AppCompatActivity {
         Button personal = findViewById(R.id.personalbutton);
         Button group = findViewById(R.id.groupbutton);
 
+
         personal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent outintent = new Intent(getApplicationContext(),TagListActivity.class);
+                outintent.putExtra("Num1",num1+1);
+                startActivityForResult(outintent, 0);
                 Intent personal_intent = new Intent(RegisterTagActivity.this, PersonalTagActivity.class);
                 RegisterTagActivity.this.startActivity(personal_intent);
             }
@@ -29,9 +34,14 @@ public class RegisterTagActivity extends AppCompatActivity {
         group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent outintent2 = new Intent(getApplicationContext(),TagListActivity.class);
+                outintent2.putExtra("Num2",num2+2);
+                startActivityForResult(outintent2, 0);
                 Intent group_intent = new Intent(RegisterTagActivity.this, GroupRegisterActivity.class);
                 RegisterTagActivity.this.startActivity(group_intent);
             }
         });
+       /* num1 = 0;
+        num2 = 0;*/
     }
 }

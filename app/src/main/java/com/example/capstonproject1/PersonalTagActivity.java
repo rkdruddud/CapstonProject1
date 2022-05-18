@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class PersonalTagActivity extends AppCompatActivity {
 
@@ -15,10 +16,16 @@ public class PersonalTagActivity extends AppCompatActivity {
         setContentView(R.layout.activity_personal_tag);
 
         Button registerbtn = findViewById(R.id.registertagbtn);
+        EditText tagname = (EditText) findViewById(R.id.editTextTextPersonName4);
 
         registerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               Intent outIntent = new Intent(getApplicationContext(),TagListActivity.class);
+
+               outIntent.putExtra("TagName",tagname.getText().toString());
+               startActivityForResult(outIntent, 0);
+
                 Intent rintent = new Intent(PersonalTagActivity.this, TagListActivity.class);
                 PersonalTagActivity.this.startActivity(rintent);
                 finish();

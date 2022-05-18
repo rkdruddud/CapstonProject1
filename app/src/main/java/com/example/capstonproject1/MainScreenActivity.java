@@ -70,7 +70,6 @@ public class MainScreenActivity extends AppCompatActivity  {
                     case R.id.nav_home:
                         getSupportFragmentManager().beginTransaction().replace(androidx.fragment.R.id.fragment_container_view_tag,
                                 new HomeFragment()).commit();
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         break;
                     case R.id.nav_person_add:
                         startActivity(new Intent(getApplicationContext(),PersonAddActivity.class));
@@ -100,7 +99,10 @@ public class MainScreenActivity extends AppCompatActivity  {
         });
 
     }
-
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
