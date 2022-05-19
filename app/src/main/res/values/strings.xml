@@ -13,5 +13,8 @@
     <string name="menu_태그목록">format_list_bulleted</string>
     <string name="menu_물건위치공유">share</string>
     <string name="menu_로그아웃">login</string>
+    <string name="title_activity_tag2">TagActivity2</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
 
 </resources>
