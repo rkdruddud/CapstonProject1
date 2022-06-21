@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("CapstonProject1");
 
-        mId = findViewById(R.id.editTextTextId);
-        mPw = findViewById(R.id.editTextTextPassword2);
+        mId = findViewById(R.id.editIDMain);
+        mPw = findViewById(R.id.editPasswordMain);
 
         Button login = findViewById(R.id.loginButton);
         TextView idSearch = findViewById(R.id.idSearchtxt);
@@ -45,37 +45,37 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*if(id.getText() == NULL && password.getText()==NULL){
-                    Toast toast = Toast.makeText(getApplicationContext(), " 아이디와 비밀번호를 입력하시오. ", Toast.LENGTH_LONG);
+                String ID = mId.getText().toString();
+                String Password = mPw.getText().toString();
+               /* if(mId.toString().length() <= 0 && mPw.toString().length() <= 0){
+                    Toast toast = Toast.makeText(getApplicationContext(), " 아이디와 비밀번호를 입력하시오. ", Toast.LENGTH_SHORT);
                 }
-                else if(id.getText() == NULL && password.getText()!=NULL){
-                    Toast toast = Toast.makeText(getApplicationContext(), " 비밀번호를 입력하시오. ", Toast.LENGTH_LONG);
+                else if(mId.toString().length() <= 0 && mPw.toString().length() >= 0){
+                    Toast toast = Toast.makeText(getApplicationContext(), " 비밀번호를 입력하시오. ", Toast.LENGTH_SHORT);
                 }
-                else if(id.getText() != NULL && password.getText()==NULL){
-                    Toast toast = Toast.makeText(getApplicationContext(), " 아이디를 입력하시오. ", Toast.LENGTH_LONG);
-                }else {} */
+                else if(mId.toString().length() >= 0 && mPw.toString().length() <= 0){
+                    Toast toast = Toast.makeText(getApplicationContext(), " 아이디를 입력하시오. ", Toast.LENGTH_SHORT);
+                }*/
                 /* 아이디와 패스워드 확인 코드 작성 */
+                if(mId.toString().trim().isEmpty()||mPw.toString().trim().isEmpty()){
+                    Toast toast = Toast.makeText(getApplicationContext(), " 아이디와 비밀번호를 확인하시오. ", Toast.LENGTH_SHORT);
+                }
+                else {
 
-                String strId = mId.getText().toString();
-                String strPw = mPw.getText().toString();
+                    mFirebaseAuth.signInWithEmailAndPassword(ID, Password).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Intent intent = new Intent(MainActivity.this, MainScreenActivity.class);
+                                MainActivity.this.startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(MainActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
 
-                mFirebaseAuth.signInWithEmailAndPassword(strId, strPw).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                   if(task.isSuccessful()){
-                       Intent intent = new Intent(MainActivity.this, MainScreenActivity.class);
-                       MainActivity.this.startActivity(intent);
-                       finish();
-                   }
-                   else
-                   {
-                       Toast.makeText(MainActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
-                   }
-                    }
-                });
-
-
+                }
 
             }
         });
