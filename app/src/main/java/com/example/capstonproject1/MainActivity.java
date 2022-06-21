@@ -45,8 +45,7 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String ID = mId.getText().toString();
-                String Password = mPw.getText().toString();
+
                /* if(mId.toString().length() <= 0 && mPw.toString().length() <= 0){
                     Toast toast = Toast.makeText(getApplicationContext(), " 아이디와 비밀번호를 입력하시오. ", Toast.LENGTH_SHORT);
                 }
@@ -57,11 +56,12 @@ public class MainActivity extends AppCompatActivity {
                     Toast toast = Toast.makeText(getApplicationContext(), " 아이디를 입력하시오. ", Toast.LENGTH_SHORT);
                 }*/
                 /* 아이디와 패스워드 확인 코드 작성 */
-                if(mId.toString().trim().isEmpty()||mPw.toString().trim().isEmpty()){
+                if(mId.getText().toString().isEmpty()&&mPw.getText().toString().isEmpty()){
                     Toast toast = Toast.makeText(getApplicationContext(), " 아이디와 비밀번호를 확인하시오. ", Toast.LENGTH_SHORT);
                 }
                 else {
-
+                    String ID = mId.getText().toString();
+                    String Password = mPw.getText().toString();
                     mFirebaseAuth.signInWithEmailAndPassword(ID, Password).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
