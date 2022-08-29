@@ -13,14 +13,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.auth.AuthResult;
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.database.DatabaseReference;
+//import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseAuth mFirebaseAuth; // 파이어베이스 인증
-    private DatabaseReference mDatabaseRef; // 실시간 데이터베이스
+   // private FirebaseAuth mFirebaseAuth; // 파이어베이스 인증
+   // private DatabaseReference mDatabaseRef; // 실시간 데이터베이스
     private EditText mPw, mId;
 
 
@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("CapstonProject1");
+       // mFirebaseAuth = FirebaseAuth.getInstance();
+        //mDatabaseRef = FirebaseDatabase.getInstance().getReference("CapstonProject1");
 
         mId = findViewById(R.id.editIDMain);
         mPw = findViewById(R.id.editPasswordMain);
@@ -60,20 +60,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast toast = Toast.makeText(getApplicationContext(), " 아이디와 비밀번호를 확인하시오. ", Toast.LENGTH_SHORT);
                 }
                 else {
-                    String ID = mId.getText().toString();
-                    String Password = mPw.getText().toString();
-                    mFirebaseAuth.signInWithEmailAndPassword(ID, Password).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Intent intent = new Intent(MainActivity.this, MainScreenActivity.class);
-                                MainActivity.this.startActivity(intent);
-                                finish();
-                            } else {
-                                Toast.makeText(MainActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                    Intent intent = new Intent(MainActivity.this, MainScreenActivity.class);
+                    MainActivity.this.startActivity(intent);
 
                 }
 
