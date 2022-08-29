@@ -11,8 +11,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 //import com.google.firebase.auth.AuthResult;
 //import com.google.firebase.auth.FirebaseAuth;
 //import com.google.firebase.database.DatabaseReference;
@@ -55,14 +61,42 @@ public class MainActivity extends AppCompatActivity {
                 else if(mId.toString().length() >= 0 && mPw.toString().length() <= 0){
                     Toast toast = Toast.makeText(getApplicationContext(), " 아이디를 입력하시오. ", Toast.LENGTH_SHORT);
                 }*/
+
+                String strId = mId.getText().toString();
+                String strPw = mPw.getText().toString();
+
                 /* 아이디와 패스워드 확인 코드 작성 */
                 if(mId.getText().toString().isEmpty()&&mPw.getText().toString().isEmpty()){
                     Toast toast = Toast.makeText(getApplicationContext(), " 아이디와 비밀번호를 확인하시오. ", Toast.LENGTH_SHORT);
                 }
                 else {
-                    Intent intent = new Intent(MainActivity.this, MainScreenActivity.class);
-                    MainActivity.this.startActivity(intent);
 
+                    Response.Listener<String> responseListener = new Response.Listener<String>(){
+                        @Override
+                        public void onResponse(String response){
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                boolean success = jsonObject.getBoolean("success");
+                                if(success){
+                                    String userID = jsonObject.getString("userID");
+                                    String userPass = jsonObject.getString("userPassword");
+                                    Toast.makeText(getApplicationContext(),"로그인에 성공하였습니다.",Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(MainActivity.this, MainScreenActivity.class);
+                                   intent.putExtra("userID", userID);
+                                    intent.putExtra("userPass", userPass);
+                                    MainActivity.this.startActivity(intent);
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"로그인에 실패하였습니다.",Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }catch (JSONException e){
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    LoginRequest loginRequest = new LoginRequest(strId, strPw, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+                    queue.add(loginRequest);
                 }
 
             }

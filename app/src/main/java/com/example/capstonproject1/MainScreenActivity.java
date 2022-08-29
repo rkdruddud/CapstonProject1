@@ -25,21 +25,20 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.capstonproject1.databinding.ActivityMainScreenBinding;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
 
 public class MainScreenActivity extends AppCompatActivity  {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainScreenBinding binding;
     private DrawerLayout drawer;
-    private FirebaseAuth mFirebaseAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
+
 
         binding = ActivityMainScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -94,7 +93,6 @@ public class MainScreenActivity extends AppCompatActivity  {
 
                     case R.id.nav_logout:
                         //로그아웃 하기
-                        mFirebaseAuth.signOut();
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         finish();
                         break;

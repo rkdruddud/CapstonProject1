@@ -12,24 +12,35 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText mName, mPw, mPwTest, mHpNumber, mId;
-    private Button mBtnRegister;
+     Button mBtnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        mId = findViewById(R.id.editTextTextId12);
+        mPw = findViewById(R.id.editTextTextPassword22);
+        mName = findViewById(R.id.editTextTextPersonName3);
+        mHpNumber = findViewById(R.id.editTextPhone);
+        mPwTest = findViewById(R.id.editTextTextPassword3);
+        mBtnRegister = findViewById(R.id.complitebtn);
 
         String strId = mId.getText().toString();
         String strPw = mPw.getText().toString();
@@ -37,15 +48,38 @@ public class RegisterActivity extends AppCompatActivity {
         String strName = mName.getText().toString();
         String strHpNumber = mHpNumber.getText().toString();
 
+
+
+
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+Response.Listener<String> responseListener = new Response.Listener<String>(){
+    @Override
+    public void onResponse(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            boolean success = jsonObject.getBoolean("success");
+            if(success){
+                Toast.makeText(getApplicationContext(),"회원 등록에 성공하였습니다.",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                 RegisterActivity.this.startActivity(intent);
+            }else{
+                Toast.makeText(getApplicationContext(),"회원 등록에 실패하였습니다.",Toast.LENGTH_SHORT).show();
+            return;
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+};
+RegisterRequest registerRequest = new RegisterRequest(strId,strPw,strName,strHpNumber, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
+                queue.add(registerRequest);
             }
         });
     }
-
 
 
     @Override
