@@ -27,7 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RegisterActivity extends AppCompatActivity {
-
+    boolean dID = false;
     private EditText mName, mPw, mPwTest, mHpNumber, mId;
 
 // <uses-library android:name="org.json.JSONObject" android:required="false" />
@@ -36,6 +36,8 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+
+
         mId = findViewById(R.id.editTextTextId12);
         mPw = findViewById(R.id.editTextTextPassword22);
         mName = findViewById(R.id.editTextTextPersonName3);
@@ -43,11 +45,13 @@ public class RegisterActivity extends AppCompatActivity {
         mPwTest = findViewById(R.id.editTextTextPassword3);
         Button mBtnRegister = findViewById(R.id.complitebtn);
         Button doubleCheckBtn = findViewById(R.id.button2);
-        /*
+
         doubleCheckBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String userID = mId.getText().toString();
+
                 Response.Listener<String> responseListener2 = new Response.Listener<String>() {
 
                     @Override
@@ -57,8 +61,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                             boolean success = jsonObject.getBoolean("success");
                             if (success) {
+                                dID = false;
                                 Toast.makeText(getApplicationContext(), "중복된 아이디가 존재합니다.", Toast.LENGTH_SHORT).show();
                             } else {
+                                dID = true;
                                 Toast.makeText(getApplicationContext(), "사용 가능한 아이디 입니다.", Toast.LENGTH_SHORT).show();
                                 return;
                             }
@@ -67,11 +73,11 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     }
                 };
-                RegisterRequest registerRequest2 = new RegisterRequest(userID, responseListener2);
+                DoubleCheckRequest doubleCheckRequest = new DoubleCheckRequest(userID, responseListener2);
                 RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
-                queue.add(registerRequest2);
+                queue.add(doubleCheckRequest);
             }
-        });*/
+        });
 
 
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
@@ -83,8 +89,10 @@ public class RegisterActivity extends AppCompatActivity {
                 String userName = mName.getText().toString();
                 String userPhonNumber = mHpNumber.getText().toString();
 
-                if(strPwTest != userPassword){
+                if(!strPwTest.equals(userPassword) ){
                     Toast.makeText(getApplicationContext(), "비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
+                }else if(dID == false){
+                    Toast.makeText(getApplicationContext(), "아이디 중복을 확인하세요.", Toast.LENGTH_SHORT).show();
                 }
                 else{
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
