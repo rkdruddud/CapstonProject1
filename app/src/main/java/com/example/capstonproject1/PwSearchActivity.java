@@ -69,8 +69,6 @@ public class PwSearchActivity extends AppCompatActivity {
                 queue.add(confirmPWRequest);
 
 
-                /* 아이디 , 이름 , 핸드폰 번호 일치시 비밀번호 알려주는 기능 작성*/
-
             }
         });
     }
