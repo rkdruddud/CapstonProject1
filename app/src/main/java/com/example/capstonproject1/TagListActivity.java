@@ -1,6 +1,8 @@
 package com.example.capstonproject1;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +14,9 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class TagListActivity extends AppCompatActivity {
+
+    RecyclerView taglistRecyclerView;
+    TagListAdapter adapter;
 
     @Override
     public void onBackPressed() {
@@ -26,15 +31,28 @@ public class TagListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tag_list);
 
-        long click_time = System.currentTimeMillis();
-
         Button plustag = findViewById(R.id.plusTagbutton);
 
-        final ArrayList<String> tagList = new ArrayList<String>();
-        ListView list = (ListView) findViewById(R.id.taglistView);
+        taglistRecyclerView = findViewById(R.id.taglistRecyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        taglistRecyclerView.setLayoutManager(layoutManager);
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,tagList);
-        list.setAdapter(adapter);
+        adapter = new TagListAdapter(getApplicationContext());
+        taglistRecyclerView.setAdapter(adapter);
+
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
+
+
+
+
+
 
         plustag.setOnClickListener(new View.OnClickListener() {
             @Override
