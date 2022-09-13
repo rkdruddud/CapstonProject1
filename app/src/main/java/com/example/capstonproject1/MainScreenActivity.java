@@ -75,7 +75,12 @@ public class MainScreenActivity extends AppCompatActivity  {
                                 new HomeFragment()).commit();
                         break;
                     case R.id.nav_person_add:
-                        startActivity(new Intent(getApplicationContext(),PersonAddActivity.class));
+
+                        Intent sintent = new Intent(getApplicationContext(), PersonAddActivity.class);
+                        final String userID = sintent.getStringExtra("userID");
+                        sintent.putExtra("userID",userID);
+                        startActivity(sintent);
+                        // startActivity(new Intent(getApplicationContext(),PersonAddActivity.class));
                         break;
                     case R.id.nav_person_management:
                         startActivity(new Intent(getApplicationContext(), PersonMangementActivity.class));

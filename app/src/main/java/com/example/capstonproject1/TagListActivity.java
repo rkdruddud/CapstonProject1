@@ -41,13 +41,13 @@ public class TagListActivity extends AppCompatActivity {
         taglistRecyclerView.setAdapter(adapter);
 
         adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
-        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
-        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
-        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
-        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
-        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
-        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
-        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건1", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건2", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건3", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건4", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건5", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건6", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건7", "개인용"));
+        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건8", "개인용"));
 
 
 
