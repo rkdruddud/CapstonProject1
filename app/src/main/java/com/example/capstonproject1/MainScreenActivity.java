@@ -4,9 +4,11 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 
 import com.google.android.material.snackbar.Snackbar;
@@ -76,10 +78,14 @@ public class MainScreenActivity extends AppCompatActivity  {
                         break;
                     case R.id.nav_person_add:
 
-                        Intent sintent = new Intent(getApplicationContext(), PersonAddActivity.class);
-                        final String userID = sintent.getStringExtra("userID");
-                        sintent.putExtra("userID",userID);
-                        startActivity(sintent);
+                        Intent gintent = getIntent();
+                        String userID = gintent.getStringExtra("userID");
+
+
+                        Intent intent = new Intent(MainScreenActivity.this, PersonAddActivity.class);
+                        intent.putExtra("userID", userID);
+                        MainScreenActivity.this.startActivity(intent);
+
                         // startActivity(new Intent(getApplicationContext(),PersonAddActivity.class));
                         break;
                     case R.id.nav_person_management:

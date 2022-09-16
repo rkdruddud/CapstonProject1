@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class FriendAddRequest extends StringRequest{
     //서버 URL 설정 (php 파일 연결)
-    final static private String URL = "http://rkdruddud.dothome.co.kr/AddFriend.php";
+    final static private String URL = "http://rkdruddud.dothome.co.kr/SendFriend.php";
     private Map<String, String> map;
 
     public FriendAddRequest(String userID, String friendID, Response.Listener<String> listener){

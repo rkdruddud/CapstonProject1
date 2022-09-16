@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                                     String userPass = jsonObject.getString("userPassword");
                                     Toast.makeText(getApplicationContext(),"로그인에 성공하였습니다.",Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(MainActivity.this, MainScreenActivity.class);
-                                   intent.putExtra("userID", userID);
+                                   intent.putExtra("userID", strId);
                                     intent.putExtra("userPass", userPass);
                                     MainActivity.this.startActivity(intent);
                                 }else{
