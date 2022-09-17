@@ -13,6 +13,9 @@
         android:theme="@style/Theme.CapstonProject1"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".FriendAcceptActivity"
+            android:exported="false" />
+        <activity
             android:name=".TagActivity"
             android:exported="false" />
         <activity

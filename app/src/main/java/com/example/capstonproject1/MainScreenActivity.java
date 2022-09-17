@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -47,9 +48,12 @@ public class MainScreenActivity extends AppCompatActivity  {
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
-
+        MenuItem menuItem = findViewById(R.id.itemMenu);
 
         setSupportActionBar(binding.appBarMainScreen.toolbar);
+
+
+
         binding.appBarMainScreen.toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,4 +136,20 @@ public class MainScreenActivity extends AppCompatActivity  {
                 || super.onSupportNavigateUp();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.itemMenu:
+                Intent gintent = getIntent();
+                String userID = gintent.getStringExtra("userID");
+                String userPassword = gintent.getStringExtra("userPassword");
+                Intent intent = new Intent(MainScreenActivity.this, FriendAcceptActivity.class);
+                intent.putExtra("userID", userID);
+                intent.putExtra("userPassword", userPassword);
+                MainScreenActivity.this.startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

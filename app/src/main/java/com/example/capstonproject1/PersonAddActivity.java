@@ -145,44 +145,5 @@ public class PersonAddActivity extends AppCompatActivity {
         });
 
 
-        // 친구 신청 버튼 클리시 이벤트 발생 == > 에러 클릭 이벤트가 발생안함
-       /* register.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent gintent = getIntent();
-
-
-                 String userID = gintent.getStringExtra("userID");
-
-                Response.Listener<String> responseListener = new Response.Listener<String>(){
-                    @Override
-                    public void onResponse(String response){
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            if(success){
-                                Toast.makeText(getApplicationContext(),"친구 신청 완료",Toast.LENGTH_SHORT).show();
-
-
-                                Intent intent = new Intent(PersonAddActivity.this, PersonMangementActivity.class);
-                                intent.putExtra("userName", userName1[1]);
-                                intent.putExtra("userPhonNumber", userPhonNumber1[1]);
-                                PersonAddActivity.this.startActivity(intent);
-                            }else{
-                                Toast.makeText(getApplicationContext(),"친구 신청에 에러가 발생했습니다.",Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                        }catch (JSONException e){
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                FriendAddRequest friendAddRequest = new FriendAddRequest(userID, f[0], responseListener);
-                RequestQueue queue = Volley.newRequestQueue(PersonAddActivity.this);
-                queue.add(friendAddRequest);
-            }
-        });*/
-
     }
 }

@@ -15,6 +15,7 @@
         <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/drawable/personimage.xml" value="0.1865" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/drawable/side_nav_bar.xml" value="0.1865" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/activity_change_pwactivity.xml" value="0.22" />
+        <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/activity_friend_accept.xml" value="0.1" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/activity_group_register.xml" value="0.25" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/activity_home.xml" value="0.14719202898550723" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/activity_id_search.xml" value="0.2" />
@@ -35,6 +36,8 @@
         <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/activity_tag2.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/activity_tag_list.xml" value="0.27239583333333334" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/activity_tag_list2.xml" value="0.27239583333333334" />
+        <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/addfriendacceptlist.xml" value="0.25" />
+        <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/addpersonmanagelist.xml" value="0.27239583333333334" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/addpersorlist.xml" value="0.25" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/addtaglist.xml" value="0.33" />
         <entry key="..\:/Users/admin/AndroidStudioProjects/CapstonProject1/app/src/main/res/layout/app_bar_main_screen.xml" value="0.22" />
