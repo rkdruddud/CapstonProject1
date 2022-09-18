@@ -3,6 +3,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,16 +17,9 @@ public class FriendAcceptListAdapter extends RecyclerView.Adapter<FriendAcceptLi
     Context mContext;
     ArrayList<FriendAcceptItem> items = new ArrayList<>();
 
-    interface OnItemClickListener{
-        void onItemClick(View v, int position); //뷰와 포지션값
-    }
-    //리스너 객체 참조 변수
-    private OnItemClickListener mListener = null;
-    //리스너 객체 참조를 어댑터에 전달 메서드
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.mListener = listener;
-    }
 
+    //리스너 객체 참조 변수
+    //리스너 객체 참조를 어댑터에 전달 메서드
     public FriendAcceptListAdapter(Context mContext){
 
         this.mContext = mContext;
@@ -57,36 +51,29 @@ public class FriendAcceptListAdapter extends RecyclerView.Adapter<FriendAcceptLi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-    ImageView person_iv;
-    TextView person_name;
-    TextView person_phonNumber;
+    ImageView friend_iv;
+    TextView friend_name;
+    TextView friend_phonNumber;
+    Button accept_btn;
+    Button deny_btn;
 
     public ViewHolder(@NonNull View itemView){
         super(itemView);
-        person_iv = itemView.findViewById(R.id.imageView4);
-        person_name = itemView.findViewById(R.id.textView29);
-        person_phonNumber = itemView.findViewById(R.id.textView27);
-
-        itemView.setOnClickListener (new View.OnClickListener () {
-            @Override
-            public void onClick(View view) {
-                int position = getAdapterPosition ();
-                if (position!=RecyclerView.NO_POSITION){
-                    if (mListener!=null){
-                        mListener.onItemClick (view,position);
-                    }
-                }
-            }
-        });
+        friend_iv = itemView.findViewById(R.id.imageView4);
+        friend_name = itemView.findViewById(R.id.textView29);
+        friend_phonNumber = itemView.findViewById(R.id.textView27);
+        accept_btn = itemView.findViewById(R.id.Acceptbutton);
+        deny_btn = itemView.findViewById(R.id.deletePersonbtn);
     }
 
 
 
 
     public void setItem(FriendAcceptItem item){
-        person_iv.setImageResource(item.resId);
-        person_name.setText(item.Name);
-        person_phonNumber.setText(item.PhonNumber);
+        friend_iv.setImageResource(item.resId);
+        friend_name.setText(item.Name);
+        friend_phonNumber.setText(item.PhonNumber);
+
     }
     }
 }

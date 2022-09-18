@@ -144,6 +144,7 @@ public class MainScreenActivity extends AppCompatActivity  {
                 Intent gintent = getIntent();
                 String userID = gintent.getStringExtra("userID");
                 String userPassword = gintent.getStringExtra("userPassword");
+
                 Intent intent = new Intent(MainScreenActivity.this, FriendAcceptActivity.class);
                 intent.putExtra("userID", userID);
                 intent.putExtra("userPassword", userPassword);

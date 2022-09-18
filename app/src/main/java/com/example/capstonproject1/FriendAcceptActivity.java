@@ -12,6 +12,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,7 +20,7 @@ public class FriendAcceptActivity extends AppCompatActivity {
 
     RecyclerView AddAcceptList;
     FriendAcceptListAdapter adapter;
-
+    String friendID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,28 +35,30 @@ public class FriendAcceptActivity extends AppCompatActivity {
         adapter = new FriendAcceptListAdapter(getApplicationContext());
         AddAcceptList.setAdapter(adapter);
 
+
         Intent gintent = getIntent();
         String userID = gintent.getStringExtra("userID");
         String userPassword = gintent.getStringExtra("userPassword");
 
-        Response.Listener<String> responseListener = new Response.Listener<String>(){
-            @Override
-            public void onResponse(String response){
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    boolean success = jsonObject.getBoolean("success");
-                    if(success){
-                        String userName = jsonObject.getString("userName");
-                        String userPhonNumber = jsonObject.getString("userPhonNumber");
 
                         Response.Listener<String> responseListener2 = new Response.Listener<String>(){
                             @Override
                             public void onResponse(String response){
                                 try {
-                                    JSONObject jsonObject = new JSONObject(response);
+
+//                                    JSONArray jsonArray = new JSONArray(response);
+                                  JSONObject jsonObject = new JSONObject(response);
                                     boolean success = jsonObject.getBoolean("success");
+                                 //  boolean success = jsonArray.getBoolean(0);
                                     if(success){
-                                            adapter.addItem(new FriendAcceptItem(R.drawable.ic_baseline_person_24, userName, userPhonNumber ));
+
+
+                                           // String friendAcceptID = jsonArray.getString(count);
+                                            String friendAcceptID = jsonObject.getString("userID");
+                                           FriendAcceptActivity friendAcceptActivity = new FriendAcceptActivity();
+                                            friendAcceptActivity.friendID = friendAcceptID;
+                                            Toast.makeText(getApplicationContext(),friendAcceptID,Toast.LENGTH_SHORT).show();
+
 
 
                                     }else{
@@ -67,22 +70,33 @@ public class FriendAcceptActivity extends AppCompatActivity {
                                 }
                             }
                         };
+        Toast.makeText(getApplicationContext(),userID,Toast.LENGTH_SHORT).show();
                         FriendAcceptRequest friendAcceptRequest = new FriendAcceptRequest(userID ,responseListener2); // 친구 요청을 보낸 userid 검색후 그 사람의 정보를 리스트로 표현
                         RequestQueue queue = Volley.newRequestQueue(FriendAcceptActivity.this);
                         queue.add(friendAcceptRequest);
 
-                    }else{
-                        Toast.makeText(getApplicationContext(),"error!",Toast.LENGTH_SHORT).show();
-                        return;
+
+                         Response.Listener<String> responseListener = new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response){
+                try {
+                    JSONObject jsonObject1 = new JSONObject(response);
+                    boolean success = jsonObject1.getBoolean("success");
+                    if(success){
+
+                        String userPhonNumber = jsonObject1.getString("userPhonNumber");
+                        String userName = jsonObject1.getString("userName");
+                        Toast.makeText(getApplicationContext(),friendID,Toast.LENGTH_SHORT).show();
+                        adapter.addItem(new FriendAcceptItem(R.drawable.ic_baseline_person_24, userName, userPhonNumber));
                     }
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
             }
         };
-        LoginRequest loginRequest = new LoginRequest(userID, userPassword, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(FriendAcceptActivity.this);
-        queue.add(loginRequest);
+        SearchPhNameRequest searchPhNameRequest = new SearchPhNameRequest(friendID ,responseListener); // 친구 요청을 보낸 userid 검색후 그 사람의 정보를 리스트로 표현
+        RequestQueue queue2 = Volley.newRequestQueue(FriendAcceptActivity.this);
+        queue2.add(searchPhNameRequest);
 
 
 
