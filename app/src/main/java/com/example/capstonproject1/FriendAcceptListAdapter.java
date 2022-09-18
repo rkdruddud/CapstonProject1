@@ -3,7 +3,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,37 +43,37 @@ public class FriendAcceptListAdapter extends RecyclerView.Adapter<FriendAcceptLi
 
     @Override
     public int getItemCount() {
-        return items.size();
+
+      return items.size();
     }
 
     public void addItem(FriendAcceptItem item){
         items.add(item);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-    ImageView friend_iv;
-    TextView friend_name;
-    TextView friend_phonNumber;
-    Button accept_btn;
-    Button deny_btn;
+    static public class ViewHolder extends RecyclerView.ViewHolder{
+        ImageView friend_iv;
+        TextView friend_name;
+        TextView friend_phonNumber;
 
-    public ViewHolder(@NonNull View itemView){
-        super(itemView);
-        friend_iv = itemView.findViewById(R.id.imageView4);
-        friend_name = itemView.findViewById(R.id.textView29);
-        friend_phonNumber = itemView.findViewById(R.id.textView27);
-        accept_btn = itemView.findViewById(R.id.Acceptbutton);
-        deny_btn = itemView.findViewById(R.id.deletePersonbtn);
-    }
+
+        public ViewHolder(@NonNull View itemView){
+            super(itemView);
+            friend_iv = itemView.findViewById(R.id.imageView4);
+            friend_name = itemView.findViewById(R.id.textView29);
+            friend_phonNumber = itemView.findViewById(R.id.textView27);
+
+        }
 
 
 
 
-    public void setItem(FriendAcceptItem item){
-        friend_iv.setImageResource(item.resId);
-        friend_name.setText(item.Name);
-        friend_phonNumber.setText(item.PhonNumber);
+        public void setItem(FriendAcceptItem item){
+            friend_iv.setImageResource(item.rsId);
+            friend_name.setText(item.Name);
+            friend_phonNumber.setText(item.PhonNumber);
 
-    }
+        }
     }
 }
+

@@ -16,7 +16,7 @@ public class SearchPhNameRequest extends StringRequest{
         super(Method.POST, URL, listener, null);
 
         map = new HashMap<>();
-        map.put("userID", friendID);
+        map.put("friendID", friendID);
     }
 
     @Override

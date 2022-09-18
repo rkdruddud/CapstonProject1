@@ -12,6 +12,9 @@ import android.view.Menu;
 import android.widget.Toast;
 
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -28,6 +31,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.capstonproject1.databinding.ActivityMainScreenBinding;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MainScreenActivity extends AppCompatActivity  {
@@ -141,14 +147,52 @@ public class MainScreenActivity extends AppCompatActivity  {
 
         switch (item.getItemId()){
             case R.id.itemMenu:
-                Intent gintent = getIntent();
-                String userID = gintent.getStringExtra("userID");
-                String userPassword = gintent.getStringExtra("userPassword");
+                Toast.makeText(getApplicationContext(),"이동ㅂ.",Toast.LENGTH_SHORT).show();
+                Intent sintent = getIntent();
+                String userID = sintent.getStringExtra("userID");
+                Response.Listener<String> responseListener = new Response.Listener<String>(){
+                    @Override
+                    public void onResponse(String response){
+                        try {
+                            //JSONArray jsonArray = new JSONArray(response);
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
 
-                Intent intent = new Intent(MainScreenActivity.this, FriendAcceptActivity.class);
-                intent.putExtra("userID", userID);
-                intent.putExtra("userPassword", userPassword);
-                MainScreenActivity.this.startActivity(intent);
+                            Intent gintent = getIntent();
+                            String userID = gintent.getStringExtra("userID");
+                            String userPassword = gintent.getStringExtra("userPassword");
+                            //boolean success = jsonArray.getBoolean(0);
+                            if(success){
+                                // int length = jsonArray.length();
+                                //int length = jsonObject.length();
+                                //for(int i =0; i<= length; i++){
+                                //String friendAcceptID = jsonArray.getString(i);
+                                String friendAcceptID = jsonObject.getString("userID");
+                                Log.d("fffffffffffff",friendAcceptID);
+                                // }
+                                // String friendAcceptID = jsonArray.getString(count);
+
+
+                                Intent intent = new Intent(MainScreenActivity.this, FriendAcceptActivity.class);
+                                intent.putExtra("friendID", friendAcceptID);
+                                intent.putExtra("userID", userID);
+                                intent.putExtra("userPassword", userPassword);
+                                MainScreenActivity.this.startActivity(intent);
+                            }else{
+                                Toast.makeText(getApplicationContext(),"친구 신청에 에러가 발생했습니다.",Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+
+                FriendAcceptRequest friendAcceptRequest = new FriendAcceptRequest(userID ,responseListener); // 친구 요청을 보낸 userid 검색후 그 사람의 정보를 리스트로 표현
+                RequestQueue queue = Volley.newRequestQueue(MainScreenActivity.this);
+                queue.add(friendAcceptRequest);
+
                 break;
         }
         return super.onOptionsItemSelected(item);

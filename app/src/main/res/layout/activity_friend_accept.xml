@@ -30,8 +30,8 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/friendARecycleView13"
-        android:layout_width="402dp"
+        android:id="@+id/friendARecycleView1234"
+        android:layout_width="0dp"
         android:layout_height="610dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

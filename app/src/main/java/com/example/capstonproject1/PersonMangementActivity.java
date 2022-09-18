@@ -19,7 +19,7 @@ public class PersonMangementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_mangement);
 
-        AddPersonManageList = findViewById(R.id.friendARecycleView13);
+        AddPersonManageList = findViewById(R.id.friendARecycleView1234);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         AddPersonManageList.setLayoutManager(layoutManager);
 
