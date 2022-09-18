@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -46,20 +47,20 @@ public class FriendAcceptActivity extends AppCompatActivity {
                             public void onResponse(String response){
                                 try {
 
-//                                    JSONArray jsonArray = new JSONArray(response);
-                                  JSONObject jsonObject = new JSONObject(response);
-                                    boolean success = jsonObject.getBoolean("success");
-                                 //  boolean success = jsonArray.getBoolean(0);
+                                    JSONArray jsonArray = new JSONArray(response);
+                                 // JSONObject jsonObject = new JSONObject(response);
+                                    //   boolean success = jsonObject.getBoolean("success");
+                                   boolean success = jsonArray.getBoolean(0);
                                     if(success){
+                                            int length = jsonArray.length();
+                                            for(int i =0; i<= length; i++){
+                                                String friendAcceptID = jsonArray.getString(i);
+                                                Toast.makeText(getApplicationContext(),friendAcceptID,Toast.LENGTH_SHORT).show();
+                                                FriendAcceptActivity friendAcceptActivity = new FriendAcceptActivity();
+                                                friendAcceptActivity.friendID = friendAcceptID;
 
-
+                                            }
                                            // String friendAcceptID = jsonArray.getString(count);
-                                            String friendAcceptID = jsonObject.getString("userID");
-                                           FriendAcceptActivity friendAcceptActivity = new FriendAcceptActivity();
-                                            friendAcceptActivity.friendID = friendAcceptID;
-                                            Toast.makeText(getApplicationContext(),friendAcceptID,Toast.LENGTH_SHORT).show();
-
-
 
                                     }else{
                                         Toast.makeText(getApplicationContext(),"친구 신청에 에러가 발생했습니다.",Toast.LENGTH_SHORT).show();
