@@ -12,11 +12,11 @@ public class SearchPhNameRequest extends StringRequest{
     final static private String URL = "http://rkdruddud.dothome.co.kr/FriendAsearch.php";
     private Map<String, String> map;
 
-    public SearchPhNameRequest(String friendID, Response.Listener<String> listener){
+    public SearchPhNameRequest(String userID, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
 
         map = new HashMap<>();
-        map.put("friendID", friendID);
+        map.put("userID", userID);
     }
 
     @Override

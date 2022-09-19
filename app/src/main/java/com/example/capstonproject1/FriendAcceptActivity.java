@@ -14,7 +14,6 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,19 +40,21 @@ public class FriendAcceptActivity extends AppCompatActivity {
         Intent gintent = getIntent();
         String friendAcceptID = gintent.getStringExtra("friendID");
 
-
+/*
         Response.Listener<String> responseListener = new Response.Listener<String>(){
             @Override
             public void onResponse(String response){
                 try {
-                    JSONObject jsonObject1 = new JSONObject(response);
-                    boolean success = jsonObject1.getBoolean("success");
+
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+
                     if(success){
-                        Toast.makeText(getApplicationContext(),"12친구 신청에 에러가 발생했습니다.",Toast.LENGTH_SHORT).show();
-                        String userPhonNumber = jsonObject1.getString("userPhonNumber");
-                        String userName = jsonObject1.getString("userName");
 
+                        String userPhonNumber = jsonObject.getString("userPhonNumber");
+                        String userName = jsonObject.getString("userName");
 
+                        adapter.addItem(new FriendAcceptItem(R.drawable.ic_baseline_person_24, "aaa", "12345"));
                         adapter.addItem(new FriendAcceptItem(R.drawable.ic_baseline_person_24, userName, userPhonNumber));
 
 
@@ -69,7 +70,7 @@ public class FriendAcceptActivity extends AppCompatActivity {
         SearchPhNameRequest searchPhNameRequest = new SearchPhNameRequest(friendAcceptID ,responseListener); // 친구 요청을 보낸 userid 검색후 그 사람의 정보를 리스트로 표현
         RequestQueue queue = Volley.newRequestQueue(FriendAcceptActivity.this);
         queue.add(searchPhNameRequest);
-
+*/
 
 
     }
