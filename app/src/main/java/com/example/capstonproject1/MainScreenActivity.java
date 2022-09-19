@@ -192,7 +192,10 @@ public class MainScreenActivity extends AppCompatActivity  {
                 FriendAcceptRequest friendAcceptRequest = new FriendAcceptRequest(userID ,responseListener); // 친구 요청을 보낸 userid 검색후 그 사람의 정보를 리스트로 표현
                 RequestQueue queue = Volley.newRequestQueue(MainScreenActivity.this);
                 queue.add(friendAcceptRequest);
-
+                /* 여기에 두개의 리퀘스트를 줘서 두개의 php 파일을 동시 접속한다면?
+                SearchPhNameRequest searchPhNameRequest = new SearchPhNameRequest(friendAcceptID ,responseListener); // 친구 요청을 보낸 userid 검색후 그 사람의 정보를 리스트로 표현
+                RequestQueue queue2 = Volley.newRequestQueue(FriendAcceptActivity.this);
+                queue.add(searchPhNameRequest);*/
                 break;
         }
         return super.onOptionsItemSelected(item);
