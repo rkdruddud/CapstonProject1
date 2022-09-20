@@ -52,6 +52,15 @@ public class PersonManageListAdapter extends RecyclerView.Adapter<PersonManageLi
         return items.size();
     }
 
+    public void remove(int position){
+        try {
+            items.remove(position);
+            notifyItemRemoved(position);
+        }catch (IndexOutOfBoundsException ex){
+            ex.printStackTrace();
+        }
+    }
+
     public void addItem(PersonManageItem item){
         items.add(item);
     }
@@ -60,12 +69,14 @@ public class PersonManageListAdapter extends RecyclerView.Adapter<PersonManageLi
     ImageView person_iv;
     TextView person_name;
     TextView person_phonNumber;
+    TextView person_accept;
 
     public ViewHolder(@NonNull View itemView){
         super(itemView);
         person_iv = itemView.findViewById(R.id.imageView2);
-        person_name = itemView.findViewById(R.id.textView22);
-        person_phonNumber = itemView.findViewById(R.id.textView21);
+        person_name = itemView.findViewById(R.id.textView30);
+        person_phonNumber = itemView.findViewById(R.id.textView31);
+        person_accept = itemView.findViewById(R.id.textView32);
 
         itemView.setOnClickListener (new View.OnClickListener () {
             @Override
@@ -87,6 +98,7 @@ public class PersonManageListAdapter extends RecyclerView.Adapter<PersonManageLi
         person_iv.setImageResource(item.resId);
         person_name.setText(item.Name);
         person_phonNumber.setText(item.PhonNumber);
+        person_accept.setText(item.Accept);
     }
     }
 }

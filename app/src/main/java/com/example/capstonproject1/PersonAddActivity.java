@@ -75,9 +75,9 @@ public class PersonAddActivity extends AppCompatActivity {
                                 if(adapter.getItemCount() == 0) {
                                     adapter.addItem(new PersonRecycleItem(R.drawable.ic_baseline_person_24, userName, userPhonNumber));
                                 }else{
-
+                                    adapter.remove(0);
                                     adapter.addItem(new PersonRecycleItem(R.drawable.ic_baseline_person_24, userName, userPhonNumber));
-                                    adapter.items.remove(adapter.getItemId(0));
+
                                 }
 
                                 adapter.setOnItemClickListener(new PersonListAdapter.OnItemClickListener() {
@@ -107,7 +107,10 @@ public class PersonAddActivity extends AppCompatActivity {
                                                                 Intent intent = new Intent(PersonAddActivity.this, PersonMangementActivity.class);
                                                                 intent.putExtra("userName", userName);
                                                                 intent.putExtra("userPhonNumber", userPhonNumber);
+                                                                intent.putExtra("userID", userID);
+                                                                intent.putExtra("friendID",friendid);
                                                                 PersonAddActivity.this.startActivity(intent);
+                                                                finish();
                                                             }else{
                                                                 Toast.makeText(getApplicationContext(),"친구 신청에 에러가 발생했습니다.",Toast.LENGTH_SHORT).show();
                                                                 return;

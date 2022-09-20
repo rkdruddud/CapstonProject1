@@ -61,6 +61,15 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.Vi
         return items.size();
     }
 
+    public void remove(int position){
+        try {
+            items.remove(position);
+            notifyItemRemoved(position);
+        }catch (IndexOutOfBoundsException ex){
+            ex.printStackTrace();
+        }
+    }
+
     public void addItem(PersonRecycleItem item){
         items.add(item);
     }

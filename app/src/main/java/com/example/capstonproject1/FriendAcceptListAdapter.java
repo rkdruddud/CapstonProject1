@@ -17,9 +17,15 @@ public class FriendAcceptListAdapter extends RecyclerView.Adapter<FriendAcceptLi
     Context mContext;
     ArrayList<FriendAcceptItem> items = new ArrayList<>();
 
-
+    interface OnItemClickListener{
+        void onItemClick(View v, int position); //뷰와 포지션값
+    }
     //리스너 객체 참조 변수
+    private OnItemClickListener mListener = null;
     //리스너 객체 참조를 어댑터에 전달 메서드
+    public void setOnItemClickListener(OnItemClickListener listener) { this.mListener = listener; }
+
+
     public FriendAcceptListAdapter(Context mContext){
 
         this.mContext = mContext;
@@ -44,14 +50,23 @@ public class FriendAcceptListAdapter extends RecyclerView.Adapter<FriendAcceptLi
     @Override
     public int getItemCount() {
 
-      return items.size();
+      return (null != items ? items.size() : 0);
+    }
+
+    public void remove(int position){
+        try {
+            items.remove(position);
+            notifyItemRemoved(position);
+        }catch (IndexOutOfBoundsException ex){
+            ex.printStackTrace();
+        }
     }
 
     public void addItem(FriendAcceptItem item){
         items.add(item);
     }
 
-    static public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView friend_iv;
         TextView friend_name;
         TextView friend_phonNumber;
@@ -60,9 +75,20 @@ public class FriendAcceptListAdapter extends RecyclerView.Adapter<FriendAcceptLi
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             friend_iv = itemView.findViewById(R.id.imageView4);
-            friend_name = itemView.findViewById(R.id.textView29);
-            friend_phonNumber = itemView.findViewById(R.id.textView27);
+            friend_name = itemView.findViewById(R.id.textView30);
+            friend_phonNumber = itemView.findViewById(R.id.textView31);
 
+            itemView.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition ();
+                    if (position!=RecyclerView.NO_POSITION){
+                        if (mListener!=null){
+                            mListener.onItemClick (view,position);
+                        }
+                    }
+                }
+            });
         }
 
 
