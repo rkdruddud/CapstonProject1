@@ -33,7 +33,7 @@ public class FriendAcceptActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friend_accept);
 
 
-        AddAcceptList = findViewById(R.id.friendManageRecycleView);
+        AddAcceptList = findViewById(R.id.friendManageRecycleView123);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         AddAcceptList.setLayoutManager(layoutManager);
 
@@ -170,8 +170,11 @@ public class FriendAcceptActivity extends AppCompatActivity {
 
                                                                                 String selectfriendID = getAfriendID();
                                                                                 OkayMyFriendRequest okayMyFriendRequest = new OkayMyFriendRequest(userID ,selectfriendID,  responseListener2);
+                                                                                OkayMyFriendRequest okayMyFriendRequest2 = new OkayMyFriendRequest(selectfriendID,userID ,  responseListener2);
                                                                                 RequestQueue queue2 = Volley.newRequestQueue(FriendAcceptActivity.this);
                                                                                 queue2.add(okayMyFriendRequest);
+                                                                                RequestQueue queue3 = Volley.newRequestQueue(FriendAcceptActivity.this);
+                                                                                queue3.add(okayMyFriendRequest2);
 
                                                                                 Response.Listener<String> responseListener3 = new Response.Listener<String>(){
                                                                                     @Override
@@ -192,8 +195,8 @@ public class FriendAcceptActivity extends AppCompatActivity {
                                                                                 };
 
                                                                                 DeleteSENDlistRequest deleteSENDlistRequest = new DeleteSENDlistRequest(selectfriendID, userID,  responseListener2);
-                                                                                RequestQueue queue3 = Volley.newRequestQueue(FriendAcceptActivity.this);
-                                                                                queue3.add(deleteSENDlistRequest);
+                                                                                RequestQueue queue4 = Volley.newRequestQueue(FriendAcceptActivity.this);
+                                                                                queue4.add(deleteSENDlistRequest);
 
                                                                             }
                                                                             else{

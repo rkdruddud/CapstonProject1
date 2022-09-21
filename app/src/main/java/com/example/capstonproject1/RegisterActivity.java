@@ -1,8 +1,6 @@
 package com.example.capstonproject1;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,14 +12,8 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import com.android.volley.Response;
-import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         mId = findViewById(R.id.editTextTextId12);
         mPw = findViewById(R.id.editTextTextPassword22);
-        mName = findViewById(R.id.editTextTextPersonName3);
+        mName = findViewById(R.id.editTextPhone);
         mHpNumber = findViewById(R.id.editTextPhone);
         mPwTest = findViewById(R.id.editTextTextPassword3);
         Button mBtnRegister = findViewById(R.id.complitebtn);

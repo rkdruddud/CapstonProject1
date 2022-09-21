@@ -7,16 +7,17 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MakePersonManagelistRequest extends StringRequest{
-    //서버 URL 설정 (php 파일 연결)
-    final static private String URL = "http://rkdruddud.dothome.co.kr/MakePersonManagelist.php";
+public class DeleteFriendlistRequest extends StringRequest{
+//서버 URL 설정 (php 파일 연결)
+    final static private String URL = "http://rkdruddud.dothome.co.kr/DeleteFriendrow.php";
     private Map<String, String> map;
 
-    public MakePersonManagelistRequest(String userID, Response.Listener<String> listener){
+    public DeleteFriendlistRequest(String userID, String userFriend, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
 
         map = new HashMap<>();
         map.put("userID", userID);
+        map.put("userFriend", userFriend);
     }
 
     @Override
@@ -24,5 +25,3 @@ public class MakePersonManagelistRequest extends StringRequest{
         return map;
     }
 }
-
-

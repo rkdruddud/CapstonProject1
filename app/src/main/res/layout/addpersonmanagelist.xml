@@ -59,14 +59,6 @@
                 android:layout_marginLeft="20dp"
                 android:text="TextView" />
 
-            <Button
-                android:id="@+id/deletePersonbtn"
-                android:layout_width="60dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="30dp"
-                android:text="삭제"
-                android:textSize="10sp" />
-
         </LinearLayout>
 
     </LinearLayout>

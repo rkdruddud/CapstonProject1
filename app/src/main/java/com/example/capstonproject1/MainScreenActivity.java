@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -22,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 
+
+//import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.FragmentNavigatorExtrasKt;
@@ -31,23 +34,38 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.capstonproject1.databinding.ActivityMainScreenBinding;
-
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class MainScreenActivity extends AppCompatActivity  {
+public class MainScreenActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private GoogleMap mMap;
+
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainScreenBinding binding;
     private DrawerLayout drawer;
 
 
+    private FragmentManager fragmentManager;
+    private MapFragment mapFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
+        fragmentManager = getFragmentManager();
+        mapFragment = (MapFragment)fragmentManager.findFragmentById(R.id.googleMap);
+        mapFragment.getMapAsync(this);
 
         binding = ActivityMainScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -99,7 +117,15 @@ public class MainScreenActivity extends AppCompatActivity  {
                         // startActivity(new Intent(getApplicationContext(),PersonAddActivity.class));
                         break;
                     case R.id.nav_person_management:
-                        startActivity(new Intent(getApplicationContext(), PersonMangementActivity.class));
+                        Intent pintent = getIntent();
+                        String userID2 = pintent.getStringExtra("userID");
+
+
+                        Intent aintent = new Intent(MainScreenActivity.this, PersonMangementActivity.class);
+                        aintent.putExtra("userID", userID2);
+                        MainScreenActivity.this.startActivity(aintent);
+
+                        //startActivity(new Intent(getApplicationContext(), PersonMangementActivity.class));
                         break;
                     case R.id.nav_tag_add:
                         startActivity(new Intent(getApplicationContext(), RegisterTagActivity.class));
@@ -158,5 +184,17 @@ public class MainScreenActivity extends AppCompatActivity  {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+       LatLng location = new LatLng(37.485284,126.901451);
+       MarkerOptions markerOptions = new MarkerOptions();
+       markerOptions.title("구로디지털단지역");
+       markerOptions.snippet("전철역");
+       markerOptions.position(location);
+       googleMap.addMarker(markerOptions);
+
+       googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,16));
+
     }
 }

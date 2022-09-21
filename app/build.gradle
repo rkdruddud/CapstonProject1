@@ -1,6 +1,9 @@
 plugins {
     id 'com.android.application'
-   // id 'com.google.gms.google-services'
+    id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+
+
 }
 
 android {
@@ -34,6 +37,11 @@ android {
     dependencies {
 
        // implementation 'com.google.firebase:firebase-auth:21.0.4'
+
+        
+        implementation 'com.google.android.gms:play-services-location:20.0.0'
+        implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
         implementation 'androidx.appcompat:appcompat:1.4.1'
         implementation 'com.google.android.material:material:1.6.0'
         implementation 'androidx.recyclerview:recyclerview:1.2.1'
@@ -44,7 +52,7 @@ android {
         implementation 'androidx.navigation:navigation-ui:2.4.2'
         implementation 'androidx.legacy:legacy-support-v4:1.0.0'
         implementation 'com.google.android.gms:play-services-maps:18.0.2'
-        implementation 'com.google.android.gms:play-services-location:19.0.1'
+        implementation 'com.google.android.gms:play-services-location:20.0.0'
         implementation 'com.android.volley:volley:1.2.1'
         //  implementation platform('com.google.firebase:firebase-bom:30.0.2')
         //implementation 'com.google.firebase:firebase-analytics'

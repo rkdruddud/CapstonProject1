@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.capstonproject1">
 
+    <!--GPS 권한-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!--인터넷 권한-->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -12,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CapstonProject1"
         android:usesCleartextTraffic="true">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyALsPR3hZFnD0TPumq4jCj4zQgLsk1q5KY" />
+
         <activity
             android:name=".FriendAcceptActivity"
             android:exported="false" />
@@ -76,9 +86,6 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAyYXE-uv3sfRQeFaxdCJjU-UHGnvFY7Xg" />
     </application>
 
 </manifest>

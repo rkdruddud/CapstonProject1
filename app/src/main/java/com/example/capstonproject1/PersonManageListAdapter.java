@@ -73,7 +73,7 @@ public class PersonManageListAdapter extends RecyclerView.Adapter<PersonManageLi
 
     public ViewHolder(@NonNull View itemView){
         super(itemView);
-        person_iv = itemView.findViewById(R.id.imageView2);
+        person_iv = itemView.findViewById(R.id.imageView4);
         person_name = itemView.findViewById(R.id.textView30);
         person_phonNumber = itemView.findViewById(R.id.textView31);
         person_accept = itemView.findViewById(R.id.textView32);
