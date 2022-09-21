@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -37,7 +38,7 @@ import com.example.capstonproject1.databinding.ActivityMainScreenBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
+//import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONException;
@@ -54,8 +55,7 @@ public class MainScreenActivity extends AppCompatActivity implements OnMapReadyC
     private DrawerLayout drawer;
 
 
-    private FragmentManager fragmentManager;
-    private MapFragment mapFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +63,9 @@ public class MainScreenActivity extends AppCompatActivity implements OnMapReadyC
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
-        fragmentManager = getFragmentManager();
-        mapFragment = (MapFragment)fragmentManager.findFragmentById(R.id.googleMap);
+        SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.googleMap);
         mapFragment.getMapAsync(this);
+
 
         binding = ActivityMainScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
