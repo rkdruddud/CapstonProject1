@@ -41,7 +41,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.home_fragment , container, false);
 
         //mapview 부름
-        sView = view.findViewById(R.id.googleMap);
+        sView = view.findViewById(R.id.mapView);
         sView.onCreate(savedInstanceState);
         sView.getMapAsync(this);
 

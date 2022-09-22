@@ -63,9 +63,9 @@ public class MainScreenActivity extends AppCompatActivity implements OnMapReadyC
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
-        SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.googleMap);
+     /*  SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.googleMap);
         mapFragment.getMapAsync(this);
-
+*/
 
         binding = ActivityMainScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
