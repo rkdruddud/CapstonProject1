@@ -19,7 +19,7 @@ public class SearchSharePersonActivity extends AppCompatActivity {
         sharebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent ssintent = new Intent(SearchSharePersonActivity.this, GroupRegisterActivity.class);
+                Intent ssintent = new Intent(SearchSharePersonActivity.this, MainScreenActivity.class);
                 SearchSharePersonActivity.this.startActivity(ssintent);
                 finish();
             }

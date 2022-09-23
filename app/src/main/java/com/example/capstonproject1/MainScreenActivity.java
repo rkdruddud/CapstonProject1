@@ -101,8 +101,9 @@ public class MainScreenActivity extends AppCompatActivity implements OnMapReadyC
 
                 switch (item.getItemId()) {
                     case R.id.nav_home:
-                        getSupportFragmentManager().beginTransaction().replace(androidx.fragment.R.id.fragment_container_view_tag,
-                                new HomeFragment()).commit();
+                       /* getSupportFragmentManager().beginTransaction().replace(androidx.fragment.R.id.fragment_container_view_tag,
+                                new HomeFragment()).commit();*/
+                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         break;
                     case R.id.nav_person_add:
 
@@ -128,7 +129,7 @@ public class MainScreenActivity extends AppCompatActivity implements OnMapReadyC
                         //startActivity(new Intent(getApplicationContext(), PersonMangementActivity.class));
                         break;
                     case R.id.nav_tag_add:
-                        startActivity(new Intent(getApplicationContext(), RegisterTagActivity.class));
+                        startActivity(new Intent(getApplicationContext(), PersonalTagActivity.class));
                         break;
                     case R.id.nav_share_tag:
                         startActivity(new Intent(getApplicationContext(), ShareActivity.class));

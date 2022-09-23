@@ -40,6 +40,8 @@ android {
         implementation 'com.google.android.gms:play-services-location:20.0.0'
         implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
+        implementation 'com.akexorcist:bluetoothspp:1.0.0'
+
         implementation 'androidx.appcompat:appcompat:1.4.1'
         implementation 'com.google.android.material:material:1.6.0'
         implementation 'androidx.recyclerview:recyclerview:1.2.1'

@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.capstonproject1">
-
-    <!--GPS 권한-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
-    <!--인터넷 권한-->
+    <!-- GPS 권한 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 인터넷 권한 -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- 블루투스 권한 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+
+    <!-- Needed only if your app makes the device discoverable to Bluetooth
+         devices. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+
+    <!-- Needed only if your app communicates with already-paired Bluetooth
+         devices. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +30,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CapstonProject1"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".TagSearchAddActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -33,9 +49,6 @@
             android:exported="false" />
         <activity
             android:name=".SearchPersonActivity"
-            android:exported="false" />
-        <activity
-            android:name=".GroupRegisterActivity"
             android:exported="false" />
         <activity
             android:name=".ChangePWActivity"
@@ -57,9 +70,6 @@
             android:exported="false" />
         <activity
             android:name=".PersonalTagActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RegisterTagActivity"
             android:exported="false" />
         <activity
             android:name=".PwSearchActivity"
@@ -85,7 +95,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
