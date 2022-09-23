@@ -41,7 +41,7 @@
         app:layout_constraintVertical_bias="0.307" />
 
     <EditText
-        android:id="@+id/editTextPersonName"
+        android:id="@+id/editTextSearchTag1"
         android:layout_width="280dp"
         android:layout_height="50dp"
         android:layout_marginTop="64dp"
@@ -63,7 +63,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/editTextPersonName"
+        app:layout_constraintStart_toEndOf="@+id/editTextSearchTag1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.367" />
 

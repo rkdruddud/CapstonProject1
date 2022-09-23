@@ -129,7 +129,14 @@ public class MainScreenActivity extends AppCompatActivity implements OnMapReadyC
                         //startActivity(new Intent(getApplicationContext(), PersonMangementActivity.class));
                         break;
                     case R.id.nav_tag_add:
-                        startActivity(new Intent(getApplicationContext(), PersonalTagActivity.class));
+                        Intent tintent = getIntent();
+                        String userID3 = tintent.getStringExtra("userID");
+
+
+                        Intent aaintent = new Intent(MainScreenActivity.this, PersonalTagActivity.class);
+                        aaintent.putExtra("userID", userID3);
+                        MainScreenActivity.this.startActivity(aaintent);
+                        // startActivity(new Intent(getApplicationContext(), PersonalTagActivity.class));
                         break;
                     case R.id.nav_share_tag:
                         startActivity(new Intent(getApplicationContext(), ShareActivity.class));

@@ -13,6 +13,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
@@ -36,10 +43,9 @@ public class TagSearchAddActivity extends AppCompatActivity {
                     , Toast.LENGTH_SHORT).show();
             finish();
         }
-/*
+
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() { //데이터 수신
-            TextView lat = findViewById(R.id.lat);
-            TextView lon = findViewById(R.id.lon);
+
 
             public void onDataReceived(byte[] data, String message) {
                 String[] array = message.split(",");
@@ -50,14 +56,40 @@ public class TagSearchAddActivity extends AppCompatActivity {
                     String lon2 = array[4].substring(3);
                     double LatF = Double.parseDouble(lat1) + Double.parseDouble(lat2)/60;
                     float LongF = Float.parseFloat(lon1) + Float.parseFloat(lon2)/60;
-                    lat.setText("위도 : "+String.format("%.10f",LatF));
-                    lon.setText("경도 : "+LongF);
+                    String latitude = Double.toString(LatF);
+                    String longitude = Float.toString(LongF);
+                    String tagID = bt.getConnectedDeviceAddress();
+
+                    Response.Listener<String> responseListener = new Response.Listener<String>(){
+                        @Override
+                        public void onResponse(String response){
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                boolean success = jsonObject.getBoolean("success");
+                                if(success){
+
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"친구 등록 실패",Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }catch (JSONException e){
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+                    AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest(tagID,latitude ,longitude,  responseListener);
+                    RequestQueue queue4 = Volley.newRequestQueue(TagSearchAddActivity.this);
+                    queue4.add(addTagLocationRequest);
+
+                    //AddTagLocation Request 클래스 사용
+                    //ㅏ데이터베이스에 넘겨주는 코드
                 }
 
 
             }
         });
-*/
+
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() { //데이터 수신
 
 
@@ -68,6 +100,11 @@ public class TagSearchAddActivity extends AppCompatActivity {
         });
         bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() { //연결됐을 때
             public void onDeviceConnected(String name, String address) {
+
+                PersonalTagActivity personalTagActivity = new PersonalTagActivity();            // 연결되면 그 태그의 아이디를 personaltagActivity화면에 태그 아이디 칸에 아이디 입력
+                String deviceID = bt.getConnectedDeviceAddress();
+                personalTagActivity.tagid.setText(deviceID);
+
                 Toast.makeText(getApplicationContext()
                         , "Connected to " + name + "\n" + address
                         , Toast.LENGTH_SHORT).show();
