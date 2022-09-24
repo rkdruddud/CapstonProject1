@@ -97,10 +97,9 @@ public class TagListActivity extends AppCompatActivity {
                             RequestQueue queue4 = Volley.newRequestQueue(TagListActivity.this);
                             queue4.add(searchTagNameRequest);
 
-
-                            adapter.setOnItemClickListener(new TagListAdapter.OnItemClickListener() {
+                            adapter.setOnItemLongClickListener(new TagListAdapter.OnItemLongClickListener() {
                                 @Override
-                                public void onItemClick(View v, int position) {
+                                public void onItemLongClick(View v, int position) {
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(TagListActivity.this);
                                     String gettagName=adapter.items.get(position).tagname;
@@ -143,7 +142,7 @@ public class TagListActivity extends AppCompatActivity {
                                             SearchTaginfoIDRequest searchTaginfoIDRequest = new SearchTaginfoIDRequest(gettagName, responseListener4);
                                             RequestQueue queue5 = Volley.newRequestQueue(TagListActivity.this);
                                             queue5.add(searchTaginfoIDRequest);
-                                           //TagInfo 의 정보 삭제
+                                            //TagInfo 의 정보 삭제
                                             Response.Listener<String> responseListener = new Response.Listener<String>() {
                                                 @Override
                                                 public void onResponse(String response) {
@@ -217,6 +216,17 @@ public class TagListActivity extends AppCompatActivity {
                                         }
                                     });
                                     builder.show();
+                                }
+                            });
+
+                            adapter.setOnItemClickListener(new TagListAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(View v, int position) {
+
+                                    Intent dintent = new Intent(TagListActivity.this, TagActivity.class);
+                                    dintent.putExtra("tagName", tagName);
+                                    startActivity(dintent);
+
                                 }
                             });
                         }

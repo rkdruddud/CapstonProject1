@@ -22,11 +22,20 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.ViewHold
     interface OnItemClickListener{
         void onItemClick(View v, int position); //뷰와 포지션값
     }
+
+    public interface OnItemLongClickListener
+    {
+        void onItemLongClick(View v, int position);
+    }
     //리스너 객체 참조 변수
     private OnItemClickListener mListener = null;
+    private OnItemLongClickListener mLongListener = null;
     //리스너 객체 참조를 어댑터에 전달 메서드
     public void setOnItemClickListener(OnItemClickListener listener) { this.mListener = listener; }
-
+    public void setOnItemLongClickListener(OnItemLongClickListener listener)
+    {
+        this.mLongListener = listener;
+    }
 
 
     public TagListAdapter(Context mContext){
@@ -78,6 +87,21 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.ViewHold
         tagname = itemView.findViewById(R.id.tagnametextView23);
         share_v = itemView.findViewById(R.id.textView24);
 
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int position = getAdapterPosition ();
+
+                        if (position != RecyclerView.NO_POSITION){
+                            mLongListener.onItemLongClick(v,position);
+
+                        }
+                        return true;
+
+
+
+                }
+            });
 
             itemView.setOnClickListener (new View.OnClickListener () {
                 @Override
@@ -86,6 +110,7 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.ViewHold
                     if (position!=RecyclerView.NO_POSITION){
                         if (mListener!=null){
                             mListener.onItemClick (view,position);
+
                         }
                     }
                 }
