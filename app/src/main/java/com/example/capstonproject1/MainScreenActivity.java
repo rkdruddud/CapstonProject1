@@ -45,7 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class MainScreenActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainScreenActivity extends AppCompatActivity {
 
     private GoogleMap mMap;
 
@@ -61,11 +61,8 @@ public class MainScreenActivity extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
-     /*  SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.googleMap);
-        mapFragment.getMapAsync(this);
-*/
+
 
         binding = ActivityMainScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -143,7 +140,15 @@ public class MainScreenActivity extends AppCompatActivity implements OnMapReadyC
                         break;
 
                     case R.id.nav_tag_list:
-                        startActivity(new Intent(getApplicationContext(), TagListActivity.class));
+                        Intent ointent = getIntent();
+                        String userID4 = ointent.getStringExtra("userID");
+
+
+                        Intent iintent = new Intent(MainScreenActivity.this, TagListActivity.class);
+                        iintent.putExtra("userID", userID4);
+                        MainScreenActivity.this.startActivity(iintent);
+
+                        //startActivity(new Intent(getApplicationContext(), TagListActivity.class));
                         break;
 
                     case R.id.nav_logout:
@@ -193,16 +198,5 @@ public class MainScreenActivity extends AppCompatActivity implements OnMapReadyC
         }
         return super.onOptionsItemSelected(item);
     }
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-       LatLng location = new LatLng(37.485284,126.901451);
-       MarkerOptions markerOptions = new MarkerOptions();
-       markerOptions.title("구로디지털단지역");
-       markerOptions.snippet("전철역");
-       markerOptions.position(location);
-       googleMap.addMarker(markerOptions);
 
-       googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,16));
-
-    }
 }

@@ -20,7 +20,7 @@ public class PersonalTagActivity extends AppCompatActivity {
 
     private String latitude;
     private String longitude;
-    EditText tagid = (EditText) findViewById(R.id.editTextSearchTag1);
+   public String ptagid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +30,14 @@ public class PersonalTagActivity extends AppCompatActivity {
         Button registerbtn = findViewById(R.id.registertagbtn);
         Button searchTagbtn = findViewById(R.id.searchTagbutton123);
         EditText tagname = (EditText) findViewById(R.id.editTextTextPersonName4);
+        EditText tagid = (EditText) findViewById(R.id.editTextTextPersonalTag11199);
 
         Intent gintent = getIntent();
         String userID = gintent.getStringExtra("userID");
         String tagName = tagname.getText().toString();
         String tagID = tagid.getText().toString();
 
+        tagid.setText(ptagid);
         searchTagbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,9 +94,7 @@ public class PersonalTagActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"태그 등록 성공",Toast.LENGTH_SHORT).show();
 
                                 Intent nintent = new Intent(PersonalTagActivity.this, TagListActivity.class);
-                                nintent.putExtra("userID", userID);
-                                nintent.putExtra("tagName", tagName);
-                                nintent.putExtra("tagID", tagID);
+
                                 startActivity(nintent);
 
                             }else{

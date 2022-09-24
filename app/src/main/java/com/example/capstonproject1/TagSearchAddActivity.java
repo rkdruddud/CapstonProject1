@@ -103,7 +103,7 @@ public class TagSearchAddActivity extends AppCompatActivity {
 
                 PersonalTagActivity personalTagActivity = new PersonalTagActivity();            // 연결되면 그 태그의 아이디를 personaltagActivity화면에 태그 아이디 칸에 아이디 입력
                 String deviceID = bt.getConnectedDeviceAddress();
-                personalTagActivity.tagid.setText(deviceID);
+                personalTagActivity.ptagid = deviceID;
 
                 Toast.makeText(getApplicationContext()
                         , "Connected to " + name + "\n" + address

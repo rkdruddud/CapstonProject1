@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -94,12 +95,23 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_home);
 
-        mLayout = findViewById(R.id.nav_home_fragment);
+        ImageButton comebackbtn2 = (ImageButton) findViewById(R.id.comebackbtn1);
+        comebackbtn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (HomeActivity.this, MainScreenActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
           locationRequest = new LocationRequest()
                 .setPriority(PRIORITY_HIGH_ACCURACY)

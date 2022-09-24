@@ -28,6 +28,9 @@ public class TagListActivity extends AppCompatActivity {
 
     RecyclerView taglistRecyclerView;
     TagListAdapter adapter;
+    private String ptagID;
+    private String puserID;
+
 
     @Override
     public void onBackPressed() {
@@ -65,63 +68,163 @@ public class TagListActivity extends AppCompatActivity {
                     if(success){
 
                         // tagId를userID로 검색 해서 반복문 써서 태그 아이디 마다의 태그 이름을 가져오는 반복문 작성하기
+                        int length = jsonObject1.length();
+                        for(int i =0; i< length-1; i++) {
+                            String tagID = jsonObject1.getString(String.valueOf(i));
+                            adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,tagName, "개인용"));
+                            adapter.notifyItemRangeRemoved(0,1);
+                            setPuserID(userID);
+                            Response.Listener<String> responseListener3 = new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        boolean success = jsonObject.getBoolean("success");
+                                        if (success) {
+                                            String tagName = jsonObject.getString("tagName");
 
+                                        } else {
 
-                        Response.Listener<String> responseListener3 = new Response.Listener<String>(){
-                            @Override
-                            public void onResponse(String response){
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    boolean success = jsonObject.getBoolean("success");
-                                    if(success){
-
-
-                                    }else{
-
-                                        return;
+                                            return;
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
-                                }catch (JSONException e){
-                                    e.printStackTrace();
                                 }
-                            }
-                        };
+                            };
 
-                        SearchTagNameRequest searchTagNameRequest = new SearchTagNameRequest(tagID,  responseListener3);
-                        RequestQueue queue4 = Volley.newRequestQueue(TagListActivity.this);
-                        queue4.add(searchTagNameRequest);
-
+                            SearchTagNameRequest searchTagNameRequest = new SearchTagNameRequest(tagID, responseListener3);
+                            RequestQueue queue4 = Volley.newRequestQueue(TagListActivity.this);
+                            queue4.add(searchTagNameRequest);
 
 
-                        adapter.setOnItemClickListener(new TagListAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(View v, int position) {
+                            adapter.setOnItemClickListener(new TagListAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(View v, int position) {
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(TagListActivity.this);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(TagListActivity.this);
+                                    String gettagName=adapter.items.get(position).tagname;
 
-                                builder.setMessage("등록된 태그를 삭제 하시겠습니까?");
+                                    builder.setMessage("등록된 태그를 삭제 하시겠습니까?");
 
-                                builder.setPositiveButton("취소", new DialogInterface.OnClickListener() {
+                                    builder.setPositiveButton("취소", new DialogInterface.OnClickListener() {
 
-                                    public void onClick(DialogInterface dialog, int id) {
+                                        public void onClick(DialogInterface dialog, int id) {
 
-                                    }
-                                });
+                                        }
+                                    });
 
-                                builder.setNegativeButton("삭제", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                    builder.setNegativeButton("삭제", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                                    }
-                                });
+                                            adapter.remove(position);
+                                            //TagID찾기
+                                            Response.Listener<String> responseListener4 = new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try {
+                                                        JSONObject jsonObject = new JSONObject(response);
+                                                        boolean success = jsonObject.getBoolean("success");
+                                                        if (success) {
+                                                            String gtagID = jsonObject.getString("tagID");
+                                                            setPtagID(gtagID);
 
-                            }
-                        });
+                                                        } else {
 
+                                                            return;
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            };
+
+                                            SearchTaginfoIDRequest searchTaginfoIDRequest = new SearchTaginfoIDRequest(gettagName, responseListener4);
+                                            RequestQueue queue5 = Volley.newRequestQueue(TagListActivity.this);
+                                            queue5.add(searchTaginfoIDRequest);
+                                           //TagInfo 의 정보 삭제
+                                            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try {
+                                                        JSONObject jsonObject = new JSONObject(response);
+                                                        boolean success = jsonObject.getBoolean("success");
+                                                        if (success) {
+
+
+                                                        } else {
+
+                                                            return;
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            };
+                                            String pptagID = getPtagID();
+                                            DeleteTaginfoRequest deleteTaginfoRequest = new DeleteTaginfoRequest(userID ,pptagID, responseListener);
+                                            RequestQueue queue = Volley.newRequestQueue(TagListActivity.this);
+                                            queue.add(deleteTaginfoRequest);
+
+                                            //TagLocation 의 정보 삭제
+                                            Response.Listener<String> responseListener1 = new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try {
+                                                        JSONObject jsonObject = new JSONObject(response);
+                                                        boolean success = jsonObject.getBoolean("success");
+                                                        if (success) {
+
+                                                            Log.d("위치 정보 삭제 : ", "성공");
+                                                        } else {
+
+                                                            return;
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            };
+
+                                            DeleteTagLocationRequest deleteTagLocationRequest = new DeleteTagLocationRequest(pptagID, responseListener1);
+                                            RequestQueue queue2 = Volley.newRequestQueue(TagListActivity.this);
+                                            queue2.add(deleteTagLocationRequest);
+
+                                            //ShareFriend의 정보 삭제
+                                            Response.Listener<String> responseListener2 = new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try {
+                                                        JSONObject jsonObject = new JSONObject(response);
+                                                        boolean success = jsonObject.getBoolean("success");
+                                                        if (success) {
+
+                                                            Log.d("공유 중인 친구 삭제 : ", "성공");
+                                                        } else {
+
+                                                            return;
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            };
+
+                                            DeleteShareFriendRequest deleteShareFriendRequest = new DeleteShareFriendRequest(userID ,pptagID, responseListener2);
+                                            RequestQueue queue3 = Volley.newRequestQueue(TagListActivity.this);
+                                            queue3.add(deleteShareFriendRequest);
+                                        }
+                                    });
+                                    builder.show();
+                                }
+                            });
+                        }
 
 
                     }
                     else {
-
+                        Toast.makeText(getApplicationContext(),"등록된 태그가 없습니다.",Toast.LENGTH_SHORT).show();
 
                     }
                 }catch (JSONException e){
@@ -129,13 +232,15 @@ public class TagListActivity extends AppCompatActivity {
                 }
             }
         };
-
-        SearchTagIDRequest searchTagIDRequest = new SearchTagIDRequest(userID, responseListener);
+        String ppuserID = getPuserID();
+        String userID2 = gintent.getStringExtra("userID");
+        Log.d("userID2 : ", userID2);
+        SearchTagIDRequest searchTagIDRequest = new SearchTagIDRequest(userID2, responseListener);
         RequestQueue queue = Volley.newRequestQueue(TagListActivity.this);
         queue.add(searchTagIDRequest);
 
 
-        adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,"물건8", "개인용"));
+
 
 
 
@@ -152,5 +257,21 @@ public class TagListActivity extends AppCompatActivity {
         });
 
     }
+
+
+    public String getPtagID(){
+        return ptagID;
+    }
+    public void setPtagID(String ptagID){
+        this.ptagID = ptagID;
+    }
+
+    public String getPuserID(){
+        return puserID;
+    }
+    public void setPuserID(String puserID){
+        this.puserID = puserID;
+    }
+
 
 }

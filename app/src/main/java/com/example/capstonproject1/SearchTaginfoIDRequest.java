@@ -7,17 +7,16 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DeleteTaglistRequest extends StringRequest{
+public class SearchTaginfoIDRequest extends StringRequest{
 //서버 URL 설정 (php 파일 연결)
-    final static private String URL = "http://rkdruddud.dothome.co.kr/DeleteFriendrow.php";
+    final static private String URL = "http://rkdruddud.dothome.co.kr/SearchTaginfoID.php";
     private Map<String, String> map;
 
-    public DeleteTaglistRequest(String userID, String userFriend, Response.Listener<String> listener){
+    public SearchTaginfoIDRequest(String tagName, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
 
         map = new HashMap<>();
-        map.put("userID", userID);
-        map.put("userFriend", userFriend);
+        map.put("tagName", tagName);
     }
 
     @Override
