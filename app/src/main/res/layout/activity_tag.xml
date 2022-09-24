@@ -50,7 +50,7 @@
         android:layout_height="match_parent"
         android:id="@+id/navigationView"
         app:headerLayout="@layout/tag_header_menu"
-
+        app:Layout="@layout/tag_main_menu"
         android:fitsSystemWindows="true"
         android:layout_gravity="end"
         >
