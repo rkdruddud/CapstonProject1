@@ -18,6 +18,17 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.ViewHold
     Context mContext;
     ArrayList<TagListItem> items = new ArrayList<>();
 
+
+    interface OnItemClickListener{
+        void onItemClick(View v, int position); //뷰와 포지션값
+    }
+    //리스너 객체 참조 변수
+    private OnItemClickListener mListener = null;
+    //리스너 객체 참조를 어댑터에 전달 메서드
+    public void setOnItemClickListener(OnItemClickListener listener) { this.mListener = listener; }
+
+
+
     public TagListAdapter(Context mContext){
     this.mContext = mContext;
     }
@@ -43,22 +54,42 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.ViewHold
         return items.size();
     }
 
+    public void remove(int position){
+        try {
+            items.remove(position);
+            notifyItemRemoved(position);
+        }catch (IndexOutOfBoundsException ex){
+            ex.printStackTrace();
+        }
+    }
+
     public void addItem(TagListItem item){
     items.add(item);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+     class ViewHolder extends RecyclerView.ViewHolder{
         ImageView image;
         TextView tagname;
         TextView share_v;
-        Button delete;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
         image = itemView.findViewById(R.id.imageView3);
         tagname = itemView.findViewById(R.id.tagnametextView23);
         share_v = itemView.findViewById(R.id.textView24);
-        delete = itemView.findViewById(R.id.deleteTagbtn);
+
+
+            itemView.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition ();
+                    if (position!=RecyclerView.NO_POSITION){
+                        if (mListener!=null){
+                            mListener.onItemClick (view,position);
+                        }
+                    }
+                }
+            });
         }
 
         public void setItem(TagListItem item){

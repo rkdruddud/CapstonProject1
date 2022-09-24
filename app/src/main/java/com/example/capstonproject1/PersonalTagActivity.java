@@ -59,6 +59,8 @@ public class PersonalTagActivity extends AppCompatActivity {
 
                             if(success){
 
+
+
                                 Response.Listener<String> responseListener = new Response.Listener<String>(){
                                     @Override
                                     public void onResponse(String response){
@@ -70,10 +72,8 @@ public class PersonalTagActivity extends AppCompatActivity {
                                             if(success){
                                                 String latitude1 = jsonObject.getString("latitude");
                                                 String longitude1 = jsonObject.getString("longitude");
-
-
-
-
+                                                setLatitude(latitude1);
+                                                setLongitude(longitude1);
 
                                             }else{
 
@@ -89,9 +89,16 @@ public class PersonalTagActivity extends AppCompatActivity {
                                 RequestQueue queue = Volley.newRequestQueue(PersonalTagActivity.this);
                                 queue.add(getTagLocationRequest);
 
+                                Toast.makeText(getApplicationContext(),"태그 등록 성공",Toast.LENGTH_SHORT).show();
+
+                                Intent nintent = new Intent(PersonalTagActivity.this, TagListActivity.class);
+                                nintent.putExtra("userID", userID);
+                                nintent.putExtra("tagName", tagName);
+                                nintent.putExtra("tagID", tagID);
+                                startActivity(nintent);
 
                             }else{
-                                Toast.makeText(getApplicationContext(),"친구 거절 실패",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         }catch (JSONException e){
