@@ -5,10 +5,14 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.bluetooth.BluetoothAdapter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -34,6 +38,44 @@ public class TagSearchAddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tag_search_add);
 
         Button btnConnect = findViewById(R.id.BluetoothConnectbtn1); //연결시도
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("블루투스에 대한 액세스가 필요합니다");
+                builder.setMessage("어플리케이션이 블루투스를 감지 할 수 있도록 위치 정보 액세스 권한을 부여하십시오.");
+                builder.setPositiveButton(android.R.string.ok, null);
+
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        requestPermissions(new String[]{Manifest.permission.BLUETOOTH_SCAN}, 2 );
+                    }
+                });
+                builder.show();
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("블루투스에 대한 액세스가 필요합니다");
+                builder.setMessage("어플리케이션이 블루투스를 연결 할 수 있도록 위치 정보 액세스 권한을 부여하십시오.");
+                builder.setPositiveButton(android.R.string.ok, null);
+
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 3 );
+                    }
+                });
+                builder.show();
+            }
+        }
 
         bt = new BluetoothSPP(this); //Initializing
 
@@ -135,6 +177,90 @@ public class TagSearchAddActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+       try {
+           switch (requestCode) {
+               case 1: {
+                   if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                       Log.d("디버깅", "coarse location permission granted");
+                   } else {
+                       final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                       builder.setTitle("권한 제한");
+                       builder.setMessage("위치 정보 및 액세스 권한이 허용되지 않았으므로 블루투스를 검색 및 연결할수 없습니다.");
+                       builder.setPositiveButton(android.R.string.ok, null);
+                       builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                           @Override
+                           public void onDismiss(DialogInterface dialog) {
+                           }
+
+                       });
+                       builder.show();
+                   }
+                   break;
+               }
+               case 2: {
+                   if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                       Log.d("디버깅", "coarse location permission granted");
+                   } else {
+                       final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                       builder.setTitle("권한 제한");
+                       builder.setMessage("블루투스 스캔권한이 허용되지 않았습니다.");
+                       builder.setPositiveButton(android.R.string.ok, null);
+                       builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                           @Override
+                           public void onDismiss(DialogInterface dialog) {
+                           }
+
+                       });
+                       builder.show();
+                   }
+                   break;
+               }
+               case 3: {
+                   if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                       Log.d("디버깅", "coarse location permission granted");
+                   } else {
+                       final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                       builder.setTitle("권한 제한");
+                       builder.setMessage("블루투스 연결 권한이 허용되지 않았습니다.");
+                       builder.setPositiveButton(android.R.string.ok, null);
+                       builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                           @Override
+                           public void onDismiss(DialogInterface dialog) {
+                           }
+
+                       });
+                       builder.show();
+                   }
+                   break;
+               }
+           }
+       }
+       catch (SecurityException ex){
+           final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+           builder.setTitle("권한 제한");
+           builder.setMessage("위치 정보 및 액세스 권한이 허용되지 않았으므로 블루투스를 검색 및 연결할수 없습니다.");
+           builder.setPositiveButton(android.R.string.ok, null);
+           builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+               @Override
+               public void onDismiss(DialogInterface dialog) {
+               }
+
+           });
+           builder.show();
+       }
+
+        return;
+    }
+
+
+
     public void onDestroy() {
         super.onDestroy();
         bt.stopService(); //블루투스 중지
@@ -157,8 +283,8 @@ public class TagSearchAddActivity extends AppCompatActivity {
             }
         }
     }
-/*   버튼 클릭시 태그에서 소리나게 하는 리스너
-    public void setup() {
+ //버튼 클릭시 태그에서 소리나게 하는 리스너
+  /*  public void setup() {
         Button btnSend = findViewById(R.id.btnSend); //데이터 전송
         btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

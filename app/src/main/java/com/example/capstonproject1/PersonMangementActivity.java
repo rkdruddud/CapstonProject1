@@ -45,7 +45,7 @@ public class PersonMangementActivity extends AppCompatActivity {
 
         Intent gintent = getIntent();
         String userID = gintent.getStringExtra("userID");
-        setPuserID(puserID);
+        setPuserID(userID);
         String friendID = gintent.getStringExtra("friendID");
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -224,7 +224,8 @@ public class PersonMangementActivity extends AppCompatActivity {
                 }
             }
         };
-        Log.d("userID : ", userID);
+
+
         MakePersonManagelistRequest makePersonManagelistRequest = new MakePersonManagelistRequest(userID, responseListener);
         RequestQueue queue = Volley.newRequestQueue(PersonMangementActivity.this);
         queue.add(makePersonManagelistRequest);

@@ -136,7 +136,8 @@ public class MainScreenActivity extends AppCompatActivity {
                         // startActivity(new Intent(getApplicationContext(), PersonalTagActivity.class));
                         break;
                     case R.id.nav_share_tag:
-                        startActivity(new Intent(getApplicationContext(), ShareActivity.class));
+  //                      startActivity(new Intent(getApplicationContext(), ShareActivity.class));
+                        startActivity(new Intent(getApplicationContext(), TagActivity.class));
                         break;
 
                     case R.id.nav_tag_list:

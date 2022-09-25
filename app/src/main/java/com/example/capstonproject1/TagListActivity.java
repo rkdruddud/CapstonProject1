@@ -225,6 +225,8 @@ public class TagListActivity extends AppCompatActivity {
 
                                     Intent dintent = new Intent(TagListActivity.this, TagActivity.class);
                                     dintent.putExtra("tagName", tagName);
+                                    dintent.putExtra("tagID", tagID);
+                                    dintent.putExtra("userID", userID);
                                     startActivity(dintent);
 
                                 }
