@@ -7,18 +7,17 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddUserTagRequest extends StringRequest{
+public class SearchUserTagRequest extends StringRequest{
 //서버 URL 설정 (php 파일 연결)
-    final static private String URL = "http://rkdruddud.dothome.co.kr/AddUserTag.php";
+    final static private String URL = "http://rkdruddud.dothome.co.kr/SearchUserTag.php";
     private Map<String, String> map;
 
-    public AddUserTagRequest(String userID, String tagID, String tagName, Response.Listener<String> listener){
+    public SearchUserTagRequest(String userID,  Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
 
         map = new HashMap<>();
         map.put("userID", userID);
-        map.put("tagID", tagID);
-        map.put("tagName", tagName);
+
     }
 
     @Override

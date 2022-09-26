@@ -42,7 +42,7 @@ public class ShareActivity extends AppCompatActivity {
         Intent gintent = getIntent();
         String userID = gintent.getStringExtra("userID");
         String tagID = gintent.getStringExtra("tagID");
-        Log.d("userID : ", userID);
+
         setPuserID(userID);
 
 
@@ -141,7 +141,7 @@ public class ShareActivity extends AppCompatActivity {
             }
         };
         String ppuserID = getPuserID();
-        Log.d("ppuserID : ", ppuserID);
+
         SearchFriendRequest searchFriendRequest = new SearchFriendRequest(ppuserID, responseListener);
         RequestQueue queue3 = Volley.newRequestQueue(ShareActivity.this);
         queue3.add(searchFriendRequest);

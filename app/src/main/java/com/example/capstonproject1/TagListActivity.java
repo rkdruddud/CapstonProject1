@@ -10,9 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -21,8 +19,6 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class TagListActivity extends AppCompatActivity {
 
@@ -47,7 +43,7 @@ public class TagListActivity extends AppCompatActivity {
 
         Button plustag = findViewById(R.id.plusTagbutton);
 
-        taglistRecyclerView = findViewById(R.id.taglistRecyclerView);
+        taglistRecyclerView = findViewById(R.id.taglistRecyclerView54321);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         taglistRecyclerView.setLayoutManager(layoutManager);
 
@@ -57,6 +53,7 @@ public class TagListActivity extends AppCompatActivity {
         Intent gintent = getIntent();
         String userID = gintent.getStringExtra("userID");
         String tagName = gintent.getStringExtra("tagName");
+        String tagID = gintent.getStringExtra("tagID");
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -71,8 +68,9 @@ public class TagListActivity extends AppCompatActivity {
                         int length = jsonObject1.length();
                         for(int i =0; i< length-1; i++) {
                             String tagID = jsonObject1.getString(String.valueOf(i));
-                            adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,tagName, "개인용"));
+                            adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,tagID, "개인용"));
                             adapter.notifyItemRangeRemoved(0,1);
+
                             setPuserID(userID);
                             Response.Listener<String> responseListener3 = new Response.Listener<String>() {
                                 @Override
@@ -246,11 +244,13 @@ public class TagListActivity extends AppCompatActivity {
         };
         String ppuserID = getPuserID();
         String userID2 = gintent.getStringExtra("userID");
-        Log.d("userID2 : ", userID2);
-        SearchTagIDRequest searchTagIDRequest = new SearchTagIDRequest(userID2, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(TagListActivity.this);
-        queue.add(searchTagIDRequest);
 
+       /* SearchTagIDRequest searchTagIDRequest = new SearchTagIDRequest(userID2, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(TagListActivity.this);
+        queue.add(searchTagIDRequest);*/
+        SearchUserTagRequest searchUserTagRequest = new SearchUserTagRequest(userID2, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(TagListActivity.this);
+        queue.add(searchUserTagRequest);
 
 
 

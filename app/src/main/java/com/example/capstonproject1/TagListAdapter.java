@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -83,7 +82,7 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.ViewHold
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
-        image = itemView.findViewById(R.id.imageView3);
+        image = itemView.findViewById(R.id.imageView33);
         tagname = itemView.findViewById(R.id.tagnametextView23);
         share_v = itemView.findViewById(R.id.textView24);
 

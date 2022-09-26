@@ -22,7 +22,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,6 +35,7 @@ public class TagSearchAddActivity extends AppCompatActivity {
     private String ptagID;
     private String platitude;
     private String plongitude;
+    private String puserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +45,19 @@ public class TagSearchAddActivity extends AppCompatActivity {
         Button btnConnect = findViewById(R.id.BluetoothConnectbtn1); //연결시도
 
         Button registerbtn = findViewById(R.id.registertagbtn2);
-        EditText tagname = (EditText) findViewById(R.id.editTextTextPersonName44);
+        EditText tagname = (EditText) findViewById(R.id.editTextTextPersonName4455);
         EditText tagid = (EditText) findViewById(R.id.editTextTextPersonalTag111999);
 
         Intent gintent = getIntent();
         String userID = gintent.getStringExtra("userID");
+        setPuserID(userID);
 
-        String tagName = tagname.getText().toString();
+
 
 
 //블루투스 ----------------------------------------------------------------------------------------------------------
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         Intent intent;
 
         if (mBluetoothAdapter.isEnabled()) {
@@ -65,6 +67,9 @@ public class TagSearchAddActivity extends AppCompatActivity {
             intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(intent, 1);
         }
+
+
+
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -134,7 +139,7 @@ public class TagSearchAddActivity extends AppCompatActivity {
                     String tagID = bt.getConnectedDeviceAddress();
 
 
-                    setPtagID(tagID);
+
                     setPlatitude(latitude);
                     setPlongitude(longitude);
 
@@ -160,14 +165,64 @@ public class TagSearchAddActivity extends AppCompatActivity {
                 String tagID = bt.getConnectedDeviceAddress();
 
                 setPtagID(tagID);
-               PersonalTagActivity personalTagActivity = new PersonalTagActivity();            // 연결되면 그 태그의 아이디를 personaltagActivity화면에 태그 아이디 칸에 아이디 입력
+                 // 연결되면 그 태그의 아이디를 personaltagActivity화면에 태그 아이디 칸에 아이디 입력
                 String deviceID = bt.getConnectedDeviceAddress();
-                personalTagActivity.ptagid = deviceID;
+                setPtagID(address);
+                tagid.setText(address);
 
                 Intent gintent = getIntent();
                 String userID = gintent.getStringExtra("userID");
+                Response.Listener<String> responseListener2 = new Response.Listener<String>(){
+                    @Override
+                    public void onResponse(String response){
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
+                            if(success){
+
+                            }else{
+                                Toast.makeText(getApplicationContext(),"블루투스 연동 실패",Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                String tagName = tagname.getText().toString();
+                AddUserTagRequest addUserTagRequest = new AddUserTagRequest(userID, address, tagName ,responseListener2);
+                RequestQueue queue2 = Volley.newRequestQueue(TagSearchAddActivity.this);
+                queue2.add(addUserTagRequest);
+
+                Response.Listener<String> responseListener = new Response.Listener<String>(){
+                    @Override
+                    public void onResponse(String response){
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
+                            if(success){
 
 
+                            }else{
+                                Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                //String tagId = getPtagID();
+                String glatitude = getPlatitude();
+                String glongitude = getPlongitude();
+
+                //Log.d("tagId : ",tagId);
+
+                String ddtagID = getPtagID();
+
+                AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest(ddtagID,glatitude ,glongitude,  responseListener);
+                RequestQueue queue4 = Volley.newRequestQueue(TagSearchAddActivity.this);
+                queue4.add(addTagLocationRequest);
 
                 Toast.makeText(getApplicationContext(), "Connected to " + name + "\n" + address, Toast.LENGTH_SHORT).show();
 
@@ -177,11 +232,16 @@ public class TagSearchAddActivity extends AppCompatActivity {
             public void onDeviceDisconnected() { //연결해제
                 Toast.makeText(getApplicationContext()
                         , "Connection lost", Toast.LENGTH_SHORT).show();
+
+                    bt.disconnect();
+
             }
 
             public void onDeviceConnectionFailed() { //연결실패
                 Toast.makeText(getApplicationContext()
                         , "Unable to connect", Toast.LENGTH_SHORT).show();
+                bt.disconnect();
+                bt.stopService();
             }
         });
 
@@ -202,58 +262,9 @@ public class TagSearchAddActivity extends AppCompatActivity {
 // 등록 기능----------------------------------------------------------------------------------------------
 
 
-        Response.Listener<String> responseListener2 = new Response.Listener<String>(){
-            @Override
-            public void onResponse(String response){
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    boolean success = jsonObject.getBoolean("success");
-                    if(success){
-
-                    }else{
-                        Toast.makeText(getApplicationContext(),"블루투스 연동 실패",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        String deviceID = bt.getConnectedDeviceAddress();
-
-        AddUserTagRequest addUserTagRequest = new AddUserTagRequest(userID, deviceID, responseListener2);
-        RequestQueue queue2 = Volley.newRequestQueue(TagSearchAddActivity.this);
-        queue2.add(addUserTagRequest);
-
-        Response.Listener<String> responseListener = new Response.Listener<String>(){
-            @Override
-            public void onResponse(String response){
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    boolean success = jsonObject.getBoolean("success");
-                    if(success){
 
 
-                    }else{
-                        Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        //String tagId = getPtagID();
-        String glatitude = getPlatitude();
-        String glongitude = getPlongitude();
 
-        //Log.d("tagId : ",tagId);
-
-        String ddtagID = bt.getConnectedDeviceAddress();
-        Log.d("tagId : ",ddtagID);
-        AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest(ddtagID,glatitude ,glongitude,  responseListener);
-        RequestQueue queue4 = Volley.newRequestQueue(TagSearchAddActivity.this);
-        queue4.add(addTagLocationRequest);
 
         registerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,13 +298,16 @@ public class TagSearchAddActivity extends AppCompatActivity {
                 String gtagID = getPtagID();
                 String getlatitude = getPlatitude();
                 String getlongitude = getPlongitude();
+                String tagName = tagname.getText().toString();
+                String guserID = getPuserID();
 
-                AddTagRequest addTagRequest = new AddTagRequest( userID, tagName, gtagID, getlatitude, getlongitude, responseListener);
+                AddTagRequest addTagRequest = new AddTagRequest( guserID, tagName, gtagID, getlatitude, getlongitude, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(TagSearchAddActivity.this);
                 queue.add(addTagRequest);
 
                 Intent nintent = new Intent(TagSearchAddActivity.this, TagListActivity.class);
-                nintent.putExtra("userID",userID);
+                nintent.putExtra("userID",guserID);
+                nintent.putExtra("tagName",tagName);
                 setResult(RESULT_OK,nintent);
                 startActivity(nintent);
             }
@@ -394,6 +408,7 @@ public class TagSearchAddActivity extends AppCompatActivity {
 
     public void onStart() {
         super.onStart();
+
         if (!bt.isBluetoothEnabled()) { //
             Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
@@ -470,6 +485,13 @@ public class TagSearchAddActivity extends AppCompatActivity {
     }
     public void setPlongitude(String plongitude){
         this.plongitude = plongitude;
+    }
+
+    public String getPuserID(){
+        return puserID;
+    }
+    public void setPuserID(String puserID){
+        this.puserID = puserID;
     }
 }
 
