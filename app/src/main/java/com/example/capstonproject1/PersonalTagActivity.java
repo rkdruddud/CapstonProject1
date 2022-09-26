@@ -34,14 +34,26 @@ public class PersonalTagActivity extends AppCompatActivity {
 
         Intent gintent = getIntent();
         String userID = gintent.getStringExtra("userID");
+        String gtagID = gintent.getStringExtra("tagID");
+        String glatitude = gintent.getStringExtra("latitude");
+        String glongitude = gintent.getStringExtra("longitude");
+
+
+
+        setLatitude(glatitude);
+        setLongitude(glongitude);
+
         String tagName = tagname.getText().toString();
         String tagID = tagid.getText().toString();
 
-        tagid.setText(ptagid);
+        tagid.setText(gtagID);
+        tagid.setText(gtagID);
+
         searchTagbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             Intent sintent =  new Intent(PersonalTagActivity.this, TagSearchAddActivity.class);
+            sintent.putExtra("userID",userID);
             PersonalTagActivity.this.startActivity(sintent);
             finish();
             }
@@ -87,7 +99,7 @@ public class PersonalTagActivity extends AppCompatActivity {
                                     }
                                 };
 
-                                GetTagLocationRequest getTagLocationRequest = new GetTagLocationRequest( tagID, responseListener);
+                                GetTagLocationRequest getTagLocationRequest = new GetTagLocationRequest( gtagID, responseListener);
                                 RequestQueue queue = Volley.newRequestQueue(PersonalTagActivity.this);
                                 queue.add(getTagLocationRequest);
 
@@ -108,7 +120,7 @@ public class PersonalTagActivity extends AppCompatActivity {
                 };
                 String getlatitude = getLatitude();
                 String getlongitude = getLongitude();
-                AddTagRequest addTagRequest = new AddTagRequest( userID, tagName, tagID, getlatitude, getlongitude, responseListener);
+                AddTagRequest addTagRequest = new AddTagRequest( userID, tagName, gtagID, getlatitude, getlongitude, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(PersonalTagActivity.this);
                 queue.add(addTagRequest);
 

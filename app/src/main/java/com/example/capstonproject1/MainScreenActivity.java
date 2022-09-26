@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -48,7 +49,7 @@ import org.json.JSONObject;
 public class MainScreenActivity extends AppCompatActivity {
 
     private GoogleMap mMap;
-
+    private String puserID;
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainScreenBinding binding;
@@ -61,7 +62,9 @@ public class MainScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        Intent ggintent = getIntent();
+        String gguserID = ggintent.getStringExtra("userID");
+        setPuserID(gguserID);
 
 
         binding = ActivityMainScreenBinding.inflate(getLayoutInflater());
@@ -130,14 +133,23 @@ public class MainScreenActivity extends AppCompatActivity {
                         String userID3 = tintent.getStringExtra("userID");
 
 
-                        Intent aaintent = new Intent(MainScreenActivity.this, PersonalTagActivity.class);
+                        Intent aaintent = new Intent(MainScreenActivity.this, TagSearchAddActivity.class);
                         aaintent.putExtra("userID", userID3);
                         MainScreenActivity.this.startActivity(aaintent);
                         // startActivity(new Intent(getApplicationContext(), PersonalTagActivity.class));
                         break;
                     case R.id.nav_share_tag:
-  //                      startActivity(new Intent(getApplicationContext(), ShareActivity.class));
-                        startActivity(new Intent(getApplicationContext(), TagActivity.class));
+
+                        Intent intent2 = getIntent();
+                        String userID5 = intent2.getStringExtra("userID");
+
+
+                        Intent iintent2 = new Intent(MainScreenActivity.this, TagActivity.class);
+                        iintent2.putExtra("userID", userID5);
+                        MainScreenActivity.this.startActivity(iintent2);
+
+                        //                      startActivity(new Intent(getApplicationContext(), ShareActivity.class));
+                        //startActivity(new Intent(getApplicationContext(), TagActivity.class));
                         break;
 
                     case R.id.nav_tag_list:
@@ -198,6 +210,13 @@ public class MainScreenActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public String getPuserID(){
+        return puserID;
+    }
+    public void setPuserID(String puserID){
+        this.puserID = puserID;
     }
 
 }

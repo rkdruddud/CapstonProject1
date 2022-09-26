@@ -263,7 +263,7 @@ public class TagListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(TagListActivity.this,PersonalTagActivity.class);
+                Intent intent = new Intent(TagListActivity.this,TagSearchAddActivity.class);
                 TagListActivity.this.startActivity(intent);
             }
         });

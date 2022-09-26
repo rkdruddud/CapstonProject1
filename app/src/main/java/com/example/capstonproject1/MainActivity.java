@@ -52,15 +52,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-               /* if(mId.toString().length() <= 0 && mPw.toString().length() <= 0){
-                    Toast toast = Toast.makeText(getApplicationContext(), " 아이디와 비밀번호를 입력하시오. ", Toast.LENGTH_SHORT);
-                }
-                else if(mId.toString().length() <= 0 && mPw.toString().length() >= 0){
-                    Toast toast = Toast.makeText(getApplicationContext(), " 비밀번호를 입력하시오. ", Toast.LENGTH_SHORT);
-                }
-                else if(mId.toString().length() >= 0 && mPw.toString().length() <= 0){
-                    Toast toast = Toast.makeText(getApplicationContext(), " 아이디를 입력하시오. ", Toast.LENGTH_SHORT);
-                }*/
+
 
                 String strId = mId.getText().toString();
                 String strPw = mPw.getText().toString();

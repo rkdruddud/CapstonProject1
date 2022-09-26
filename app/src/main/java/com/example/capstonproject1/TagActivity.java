@@ -285,6 +285,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Intent intent = new Intent(TagActivity.this, ShareActivity.class);
                 intent.putExtra("tagID",tagID);
+
                 intent.putExtra("userID",userID);
                 startActivity(intent);
             }

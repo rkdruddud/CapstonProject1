@@ -15,12 +15,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +33,9 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
 public class TagSearchAddActivity extends AppCompatActivity {
 
     private BluetoothSPP bt;
+    private String ptagID;
+    private String platitude;
+    private String plongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,28 @@ public class TagSearchAddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tag_search_add);
 
         Button btnConnect = findViewById(R.id.BluetoothConnectbtn1); //연결시도
+
+        Button registerbtn = findViewById(R.id.registertagbtn2);
+        EditText tagname = (EditText) findViewById(R.id.editTextTextPersonName44);
+        EditText tagid = (EditText) findViewById(R.id.editTextTextPersonalTag111999);
+
+        Intent gintent = getIntent();
+        String userID = gintent.getStringExtra("userID");
+
+        String tagName = tagname.getText().toString();
+
+
+//블루투스 ----------------------------------------------------------------------------------------------------------
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        Intent intent;
+
+        if (mBluetoothAdapter.isEnabled()) {
+            // 블루투스 관련 실행 진행
+        } else {
+            // 블루투스 활성화 하도록
+            intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(intent, 1);
+        }
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -78,12 +105,15 @@ public class TagSearchAddActivity extends AppCompatActivity {
         }
 
         bt = new BluetoothSPP(this); //Initializing
+        try {
 
-        if (!bt.isBluetoothAvailable()) { //블루투스 사용 불가
-            Toast.makeText(getApplicationContext()
-                    , "Bluetooth is not available"
-                    , Toast.LENGTH_SHORT).show();
-            finish();
+            if (!bt.isBluetoothAvailable()) { //블루투스 사용 불가
+                Toast.makeText(getApplicationContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        } catch (SecurityException e){
+            Toast.makeText(getApplicationContext(), "앱 사용 권한을 허용해주세요", Toast.LENGTH_SHORT).show();
+
         }
 
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() { //데이터 수신
@@ -98,31 +128,16 @@ public class TagSearchAddActivity extends AppCompatActivity {
                     String lon2 = array[4].substring(3);
                     double LatF = Double.parseDouble(lat1) + Double.parseDouble(lat2)/60;
                     float LongF = Float.parseFloat(lon1) + Float.parseFloat(lon2)/60;
+
                     String latitude = Double.toString(LatF);
                     String longitude = Float.toString(LongF);
                     String tagID = bt.getConnectedDeviceAddress();
 
-                    Response.Listener<String> responseListener = new Response.Listener<String>(){
-                        @Override
-                        public void onResponse(String response){
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                boolean success = jsonObject.getBoolean("success");
-                                if(success){
 
-                                }else{
-                                    Toast.makeText(getApplicationContext(),"친구 등록 실패",Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                            }catch (JSONException e){
-                                e.printStackTrace();
-                            }
-                        }
-                    };
+                    setPtagID(tagID);
+                    setPlatitude(latitude);
+                    setPlongitude(longitude);
 
-                    AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest(tagID,latitude ,longitude,  responseListener);
-                    RequestQueue queue4 = Volley.newRequestQueue(TagSearchAddActivity.this);
-                    queue4.add(addTagLocationRequest);
 
                     //AddTagLocation Request 클래스 사용
                     //ㅏ데이터베이스에 넘겨주는 코드
@@ -142,14 +157,21 @@ public class TagSearchAddActivity extends AppCompatActivity {
         });
         bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() { //연결됐을 때
             public void onDeviceConnected(String name, String address) {
+                String tagID = bt.getConnectedDeviceAddress();
 
-                PersonalTagActivity personalTagActivity = new PersonalTagActivity();            // 연결되면 그 태그의 아이디를 personaltagActivity화면에 태그 아이디 칸에 아이디 입력
+                setPtagID(tagID);
+               PersonalTagActivity personalTagActivity = new PersonalTagActivity();            // 연결되면 그 태그의 아이디를 personaltagActivity화면에 태그 아이디 칸에 아이디 입력
                 String deviceID = bt.getConnectedDeviceAddress();
                 personalTagActivity.ptagid = deviceID;
 
-                Toast.makeText(getApplicationContext()
-                        , "Connected to " + name + "\n" + address
-                        , Toast.LENGTH_SHORT).show();
+                Intent gintent = getIntent();
+                String userID = gintent.getStringExtra("userID");
+
+
+
+                Toast.makeText(getApplicationContext(), "Connected to " + name + "\n" + address, Toast.LENGTH_SHORT).show();
+
+
             }
 
             public void onDeviceDisconnected() { //연결해제
@@ -170,12 +192,116 @@ public class TagSearchAddActivity extends AppCompatActivity {
                if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
                     bt.disconnect();
                 } else {
-                    Intent intent = new Intent(getApplicationContext(), DeviceList.class);
-                    startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
+                   Intent intent = new Intent(getApplicationContext(), DeviceList.class);
+                   startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
                 }
+
+            }
+        });
+
+// 등록 기능----------------------------------------------------------------------------------------------
+
+
+        Response.Listener<String> responseListener2 = new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response){
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    if(success){
+
+                    }else{
+                        Toast.makeText(getApplicationContext(),"블루투스 연동 실패",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        String deviceID = bt.getConnectedDeviceAddress();
+
+        AddUserTagRequest addUserTagRequest = new AddUserTagRequest(userID, deviceID, responseListener2);
+        RequestQueue queue2 = Volley.newRequestQueue(TagSearchAddActivity.this);
+        queue2.add(addUserTagRequest);
+
+        Response.Listener<String> responseListener = new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response){
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    if(success){
+
+
+                    }else{
+                        Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        //String tagId = getPtagID();
+        String glatitude = getPlatitude();
+        String glongitude = getPlongitude();
+
+        //Log.d("tagId : ",tagId);
+
+        String ddtagID = bt.getConnectedDeviceAddress();
+        Log.d("tagId : ",ddtagID);
+        AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest(ddtagID,glatitude ,glongitude,  responseListener);
+        RequestQueue queue4 = Volley.newRequestQueue(TagSearchAddActivity.this);
+        queue4.add(addTagLocationRequest);
+
+        registerbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Response.Listener<String> responseListener = new Response.Listener<String>(){
+                    @Override
+                    public void onResponse(String response){
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
+
+
+                            if(success){
+
+                                Toast.makeText(getApplicationContext(),"태그 등록 성공",Toast.LENGTH_SHORT).show();
+
+
+
+
+                            }else{
+                                Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                String gtagID = getPtagID();
+                String getlatitude = getPlatitude();
+                String getlongitude = getPlongitude();
+
+                AddTagRequest addTagRequest = new AddTagRequest( userID, tagName, gtagID, getlatitude, getlongitude, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(TagSearchAddActivity.this);
+                queue.add(addTagRequest);
+
+                Intent nintent = new Intent(TagSearchAddActivity.this, TagListActivity.class);
+                nintent.putExtra("userID",userID);
+                setResult(RESULT_OK,nintent);
+                startActivity(nintent);
             }
         });
     }
+
+    //_____________________
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -276,10 +402,15 @@ public class TagSearchAddActivity extends AppCompatActivity {
             startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
 
         } else {
-            if (!bt.isServiceAvailable()) {
-                bt.setupService();
-                bt.startService(BluetoothState.DEVICE_OTHER); //DEVICE_ANDROID는 안드로이드 기기 끼리
-                setup();
+            try {
+
+                if (!bt.isServiceAvailable()) {
+                    bt.setupService();
+                    bt.startService(BluetoothState.DEVICE_OTHER); //DEVICE_ANDROID는 안드로이드 기기 끼리
+                    setup();
+                }
+            } catch (SecurityException ex){
+                Toast.makeText(getApplicationContext(), "앱 사용 권한을 허용해주세요", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -315,6 +446,30 @@ public class TagSearchAddActivity extends AppCompatActivity {
                 finish();
             }
         }
+    }
+
+
+    public String getPtagID(){
+        return ptagID;
+    }
+    public void setPtagID(String ptagID){
+        this.ptagID = ptagID;
+    }
+
+
+    public String getPlatitude(){
+        return platitude;
+    }
+    public void setPlatitude(String platitude){
+        this.platitude = platitude;
+    }
+
+
+    public String getPlongitude(){
+        return plongitude;
+    }
+    public void setPlongitude(String plongitude){
+        this.plongitude = plongitude;
     }
 }
 
