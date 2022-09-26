@@ -29,6 +29,7 @@ public class ShareActivity extends AppCompatActivity {
         String tagID = gintent.getStringExtra("tagID");
 
 
+
         Response.Listener<String> responseListener = new Response.Listener<String>(){
             @Override
             public void onResponse(String response){
@@ -38,7 +39,54 @@ public class ShareActivity extends AppCompatActivity {
                     if(success){
 
 
+                        int length = jsonObject.length();
+                        for(int i =0; i< length-1; i++) {
+                            String friendID = jsonObject.getString(String.valueOf(i));
+
+                            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        boolean success = jsonObject.getBoolean("success");
+                                        if (success) {
+
+
+                                        } else {
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+
+                            SearchFriendRequest searchFriendRequest = new SearchFriendRequest(userID, responseListener);
+                            RequestQueue queue = Volley.newRequestQueue(ShareActivity.this);
+                            queue.add(searchFriendRequest);
+
+                            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        boolean success = jsonObject.getBoolean("success");
+                                        if (success) {
+
+
+                                        } else {
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+
+                            AddShareFriendRequest addShareFriendRequest = new AddShareFriendRequest(userID, tagID, friendID, responseListener);
+                            RequestQueue queue = Volley.newRequestQueue(ShareActivity.this);
+                            queue.add(addShareFriendRequest);
+                        }
                     }else{
+
                     }
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -46,9 +94,11 @@ public class ShareActivity extends AppCompatActivity {
             }
         };
 
-        AddShareFriendRequest addShareFriendRequest = new AddShareFriendRequest(userID, tagID, friendID, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(ShareActivity.this);
-        queue.add(addShareFriendRequest);
+         SearchPhNameRequest searchPhNameRequest= new SearchPhNameRequest(userID, responseListener);
+        RequestQueue queue2 = Volley.newRequestQueue(ShareActivity.this);
+        queue2.add(searchPhNameRequest);
+
+
 
 
         share.setOnClickListener(new View.OnClickListener() {
