@@ -32,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         mId = findViewById(R.id.editTextTextId12);
         mPw = findViewById(R.id.editTextTextPassword22);
-        mName = findViewById(R.id.editTextPhone);
+        mName = findViewById(R.id.editTextTextPersonName);
         mHpNumber = findViewById(R.id.editTextPhone);
         mPwTest = findViewById(R.id.editTextTextPassword3);
         Button mBtnRegister = findViewById(R.id.complitebtn);
