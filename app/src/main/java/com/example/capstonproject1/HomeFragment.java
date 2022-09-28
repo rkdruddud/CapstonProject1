@@ -333,8 +333,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         markerOptions.position(currentLatLng);
         markerOptions.title(markerTitle);
         markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);*/
-        currentMarker = mMap.addMarker(markerOptions);
+        markerOptions.draggable(true);
+        currentMarker = mMap.addMarker(markerOptions);*/
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
         mMap.moveCamera(cameraUpdate);
     }
