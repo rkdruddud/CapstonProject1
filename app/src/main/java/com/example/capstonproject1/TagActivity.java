@@ -337,6 +337,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 15));
                             LatLng latLng = new LatLng(latitude, longitude);
 
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude),15));
                             double distance = SphericalUtil.computeDistanceBetween(currentPosition, latLng);
                             TextView showdistance = findViewById(R.id.distanceShowtxt);
                             String distancestr = Double.toString(distance);
@@ -437,7 +438,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                 currentPosition
                         = new LatLng(location.getLatitude(), location.getLongitude());
 
-
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()),15));
                 String markerTitle = getCurrentAddress(currentPosition);
                 String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                         + " 경도:" + String.valueOf(location.getLongitude());
@@ -446,7 +447,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
                 //현재 위치에 마커 생성하고 이동
-                //setCurrentLocation(location, markerTitle, markerSnippet);
+                setCurrentLocation(location, markerTitle, markerSnippet);
 
                 mCurrentLocatiion = location;
             }
@@ -579,7 +580,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
         LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
+/*
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(currentLatLng);
         markerOptions.title(markerTitle);
@@ -588,7 +589,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
         currentMarker = mMap.addMarker(markerOptions);
-
+*/
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
         mMap.moveCamera(cameraUpdate);
 
