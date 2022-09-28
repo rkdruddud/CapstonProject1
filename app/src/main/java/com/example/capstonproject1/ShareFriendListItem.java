@@ -6,9 +6,9 @@ public class ShareFriendListItem {
     String friendname;
 
 
-    public ShareFriendListItem(int resid, String friendnamename){
+    public ShareFriendListItem(int resid, String friendname){
         this.resid = resid;
-        this.friendname =  friendnamename;
+        this.friendname =  friendname;
 
     }
 }

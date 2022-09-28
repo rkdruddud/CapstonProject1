@@ -68,6 +68,8 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
     ActionBarDrawerToggle actionBarDrawerToggle;
     RecyclerView TagShareFriendList;
     ShareFriendListAdapter adapter;
+
+
     private String ptagID;
     private String puserID;
 
@@ -155,8 +157,6 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
 
-
-
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
 
         builder.addLocationRequest(locationRequest);
@@ -236,12 +236,14 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                                                                 }
                                                             };
                                                             String tagID = getPtagID();
+                                                            Log.d("tagID", tagID);
                                                             StopShareFriendRequest stopShareFriendRequest = new StopShareFriendRequest(friendID, tagID, responseListener2);
                                                             RequestQueue queue2 = Volley.newRequestQueue(TagActivity.this);
                                                             queue2.add(stopShareFriendRequest);
 
                                                         }
                                                     });
+                                                    builder.show();
                                                 }
                                             });
 
@@ -278,6 +280,8 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
         SearchShareFriendIDRequest searchShareFriendIDRequest = new SearchShareFriendIDRequest(userID, tagID, responseListener);
         RequestQueue queue = Volley.newRequestQueue(TagActivity.this);
         queue.add(searchShareFriendIDRequest);
+
+
 
 
         sharebtn.setOnClickListener(new View.OnClickListener() {
@@ -322,7 +326,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                         String strlatitude = jsonObject.getString("latitude");
                         String strlongitude = jsonObject.getString("longitude");
                         String tagName = jsonObject.getString("tagName");
-                        if(!strlongitude.equals(null) && !strlatitude.equals(null)) {
+                      //  if(!strlongitude.equals(null) && !strlatitude.equals(null)) {
                             float latitude = Float.parseFloat(strlatitude);
                             float longitude = Float.parseFloat(strlongitude);
 
@@ -342,7 +346,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                             TextView showdistance = findViewById(R.id.distanceShowtxt);
                             String distancestr = Double.toString(distance);
                             showdistance.setText(distancestr);
-                        }
+                      //  }
                     } else {
 
                         return;
