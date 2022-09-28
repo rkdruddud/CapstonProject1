@@ -329,11 +329,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
         if (currentMarker != null) currentMarker.remove();
         LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
+        /*MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(currentLatLng);
         markerOptions.title(markerTitle);
         markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
+        markerOptions.draggable(true);*/
         currentMarker = mMap.addMarker(markerOptions);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
         mMap.moveCamera(cameraUpdate);

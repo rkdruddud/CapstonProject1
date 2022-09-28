@@ -121,7 +121,11 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
         Intent gintent = getIntent();
         String tagid = gintent.getStringExtra("tagID");
+        String tagName = gintent.getStringExtra("tagName");
         String userid = gintent.getStringExtra("userID");
+
+        TextView titleTagName = findViewById(R.id.titleTagName);
+        titleTagName.setText(tagName);
 
         LinearLayout container = findViewById(R.id.itemLayout12);
         drawerLayout2 = findViewById(R.id.drawerLayoutTag);

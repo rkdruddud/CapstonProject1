@@ -52,7 +52,7 @@ public class TagListActivity extends AppCompatActivity {
 
         Intent gintent = getIntent();
         String userID = gintent.getStringExtra("userID");
-        String tagName = gintent.getStringExtra("tagName");
+
         String tagID = gintent.getStringExtra("tagID");
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -220,7 +220,7 @@ public class TagListActivity extends AppCompatActivity {
                             adapter.setOnItemClickListener(new TagListAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View v, int position) {
-
+                                    String tagName = adapter.items.get(position).tagname;
                                     Intent dintent = new Intent(TagListActivity.this, TagActivity.class);
                                     dintent.putExtra("tagName", tagName);
                                     dintent.putExtra("tagID", tagID);

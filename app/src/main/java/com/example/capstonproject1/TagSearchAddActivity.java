@@ -283,8 +283,6 @@ public class TagSearchAddActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"태그 등록 성공",Toast.LENGTH_SHORT).show();
 
 
-
-
                             }else{
                                 Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
                                 return;
