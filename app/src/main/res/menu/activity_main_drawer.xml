@@ -4,10 +4,6 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_baseline_home_24"
-            android:title="홈" />
 
         <item
             android:id="@+id/nav_person_add"
@@ -31,11 +27,6 @@
             android:id="@+id/nav_tag_list"
             android:icon="@drawable/ic_baseline_format_list_bulleted_24"
             android:title="태그목록"
-            />
-        <item
-            android:id="@+id/nav_share_tag"
-            android:icon="@drawable/ic_baseline_share"
-            android:title="물건 위치공유"
             />
         <item
             android:id="@+id/nav_logout"

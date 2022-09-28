@@ -9,7 +9,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,12 +19,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -124,7 +120,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
         String tagName = gintent.getStringExtra("tagName");
         String userid = gintent.getStringExtra("userID");
 
-        TextView titleTagName = findViewById(R.id.titleTagName);
+        TextView titleTagName = findViewById(R.id.sharedtitleTagName12);
         titleTagName.setText(tagName);
 
         LinearLayout container = findViewById(R.id.itemLayout12);
@@ -135,7 +131,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
         Button sharebtn = findViewById(R.id.Sharebtn3);
 
 
-        TagShareFriendList = findViewById(R.id.shareRecyclerView);
+        TagShareFriendList = findViewById(R.id.shareFriendNameRrView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         TagShareFriendList.setLayoutManager(layoutManager);
 
@@ -288,9 +284,9 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TagActivity.this, ShareActivity.class);
-               /* intent.putExtra("tagID",tagID);
+               intent.putExtra("tagID",tagID);
 
-                intent.putExtra("userID",userID);*/
+                intent.putExtra("userID",userID);
                 startActivity(intent);
             }
         });

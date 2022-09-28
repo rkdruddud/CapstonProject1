@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,13 +23,14 @@ public class ShareActivity extends AppCompatActivity {
     RecyclerView ShareFriendList;
     SharelistAdapter adapter;
     private String puserID;
+    private String pfriendName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
 
-        ShareFriendList = findViewById(R.id.ShareRecyclerView);
+        ShareFriendList = findViewById(R.id.ShareRecyclerView15555);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         ShareFriendList.setLayoutManager(layoutManager);
 
@@ -57,6 +57,37 @@ public class ShareActivity extends AppCompatActivity {
                         int length = jsonObject.length();
                         for(int i =0; i< length-1; i++) {
                             String friendID = jsonObject.getString(String.valueOf(i));
+                            // 친구의 이름 가져와서 아이템 만들기
+                            Log.d("FriendID",friendID);
+
+                            Response.Listener<String> responseListener2 = new Response.Listener<String>(){
+                                @Override
+                                public void onResponse(String response){
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        boolean success = jsonObject.getBoolean("success");
+                                        if(success){
+                                            String friendName = jsonObject.getString("userName");
+                                         setPfriendName(friendName);
+
+
+
+                                            adapter.addItem(new Sharelistitem(R.drawable.ic_baseline_person_24, friendName));
+                                            adapter.notifyItemChanged(0);
+
+
+                                        }else{
+
+                                        }
+                                    }catch (JSONException e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+
+                            SearchPhNameRequest searchPhNameRequest= new SearchPhNameRequest(friendID, responseListener2);
+                            RequestQueue queue2 = Volley.newRequestQueue(ShareActivity.this);
+                            queue2.add(searchPhNameRequest);
 
                             adapter.setOnItemClickListener(new SharelistAdapter.OnItemClickListener() {
                                 @Override
@@ -97,33 +128,6 @@ public class ShareActivity extends AppCompatActivity {
                                             queue.add(addShareFriendRequest);
 
 
-
-                                            // 친구의 이름 가져와서 아이템 만들기
-                                            Response.Listener<String> responseListener2 = new Response.Listener<String>(){
-                                                @Override
-                                                public void onResponse(String response){
-                                                    try {
-                                                        JSONObject jsonObject = new JSONObject(response);
-                                                        boolean success = jsonObject.getBoolean("success");
-                                                        if(success){
-                                                            String friendName = jsonObject.getString("userName");
-                                                            adapter.addItem(new ShareFriendItem(R.drawable.ic_baseline_person_24, friendName));
-                                                            adapter.notifyItemRangeRemoved(0,1);
-
-
-                                                        }else{
-
-                                                        }
-                                                    }catch (JSONException e){
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            };
-
-                                            SearchPhNameRequest searchPhNameRequest= new SearchPhNameRequest(userID, responseListener2);
-                                            RequestQueue queue2 = Volley.newRequestQueue(ShareActivity.this);
-                                            queue2.add(searchPhNameRequest);
-
                                         }
                                     });
                                     builder.show();
@@ -141,15 +145,21 @@ public class ShareActivity extends AppCompatActivity {
             }
         };
         String ppuserID = getPuserID();
-
+        Log.d("userID : " , ppuserID);
         SearchFriendRequest searchFriendRequest = new SearchFriendRequest(ppuserID, responseListener);
         RequestQueue queue3 = Volley.newRequestQueue(ShareActivity.this);
         queue3.add(searchFriendRequest);
 
 
+
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
+
+
                 Intent sintent = new Intent(ShareActivity.this, MainScreenActivity.class);
                 sintent.putExtra("userID", userID);
                 setResult(RESULT_OK,sintent);
@@ -165,5 +175,12 @@ public class ShareActivity extends AppCompatActivity {
     }
     public void setPuserID(String puserID){
         this.puserID = puserID;
+    }
+
+    public String getPfriendName(){
+        return pfriendName;
+    }
+    public void setPfriendName(String pfriendName){
+        this.pfriendName = pfriendName;
     }
 }

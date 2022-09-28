@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class SharelistAdapter extends RecyclerView.Adapter<SharelistAdapter.ViewHolder> {
 
     Context mContext;
-    ArrayList<ShareFriendItem> items = new ArrayList<>();
+    ArrayList<Sharelistitem> items = new ArrayList<>();
 
 
     interface OnItemClickListener{
@@ -45,14 +45,14 @@ public class SharelistAdapter extends RecyclerView.Adapter<SharelistAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View itemView = inflater.inflate(R.layout.sharefriendlist,parent,false);
+        View itemView = inflater.inflate(R.layout.sharlistitem,parent,false);
 
         return new ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    ShareFriendItem item = items.get(position);
+    Sharelistitem item = items.get(position);
     holder.setItem(item);
     }
 
@@ -71,19 +71,19 @@ public class SharelistAdapter extends RecyclerView.Adapter<SharelistAdapter.View
         }
     }
 
-    public void addItem(ShareFriendItem item){
+    public void addItem(Sharelistitem item){
     items.add(item);
     }
 
      class ViewHolder extends RecyclerView.ViewHolder{
         ImageView image;
-        TextView friendID;
+        TextView friendName;
         TextView share_v;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
         image = itemView.findViewById(R.id.imag555);
-        friendID = itemView.findViewById(R.id.shareFriendtxt);
+        friendName = itemView.findViewById(R.id.shareFriendtxt);
 
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -116,9 +116,9 @@ public class SharelistAdapter extends RecyclerView.Adapter<SharelistAdapter.View
             });
         }
 
-        public void setItem(ShareFriendItem item){
+        public void setItem(Sharelistitem item){
             image.setImageResource(item.resId);
-            friendID.setText(item.FriendName);
+            friendName.setText(item.FriendName);
 
         }
     }

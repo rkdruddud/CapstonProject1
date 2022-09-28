@@ -39,7 +39,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyALsPR3hZFnD0TPumq4jCj4zQgLsk1q5KY" />
-
+        <activity
+            android:name=".SharedTagActivity"
+            android:exported="false" />
         <activity
             android:name=".FriendAcceptActivity"
             android:exported="false" />
@@ -47,16 +49,10 @@
             android:name=".TagActivity"
             android:exported="false" />
         <activity
-            android:name=".SearchSharePersonActivity"
-            android:exported="false" />
-        <activity
             android:name=".SearchPersonActivity"
             android:exported="false" />
         <activity
             android:name=".ChangePWActivity"
-            android:exported="false" />
-        <activity
-            android:name=".HomeActivity"
             android:exported="false" />
         <activity
             android:name=".ShareActivity"

@@ -5,6 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/imag555"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="#6075B8ED"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_person_24" />
+
     <LinearLayout
         android:id="@+id/shareListLayout"
         android:layout_width="330dp"
@@ -23,15 +33,5 @@
             android:layout_marginTop="20dp"
             android:textSize="24sp" />
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/imag555"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:background="#6075B8ED"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_person_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

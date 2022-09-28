@@ -100,11 +100,7 @@ public class MainScreenActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 switch (item.getItemId()) {
-                    case R.id.nav_home:
-                       /* getSupportFragmentManager().beginTransaction().replace(androidx.fragment.R.id.fragment_container_view_tag,
-                                new HomeFragment()).commit();*/
-                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        break;
+
                     case R.id.nav_person_add:
 
                         Intent gintent = getIntent();
@@ -137,19 +133,6 @@ public class MainScreenActivity extends AppCompatActivity {
                         aaintent.putExtra("userID", userID3);
                         MainScreenActivity.this.startActivity(aaintent);
                         // startActivity(new Intent(getApplicationContext(), PersonalTagActivity.class));
-                        break;
-                    case R.id.nav_share_tag:
-
-                        Intent intent2 = getIntent();
-                        String userID5 = intent2.getStringExtra("userID");
-
-
-                        Intent iintent2 = new Intent(MainScreenActivity.this, TagActivity.class);
-                        iintent2.putExtra("userID", userID5);
-                        MainScreenActivity.this.startActivity(iintent2);
-
-                        //                      startActivity(new Intent(getApplicationContext(), ShareActivity.class));
-                        //startActivity(new Intent(getApplicationContext(), TagActivity.class));
                         break;
 
                     case R.id.nav_tag_list:

@@ -1,11 +1,5 @@
 package com.example.capstonproject1;
 
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,50 +10,59 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.os.Looper;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageButton;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.maps.android.SphericalUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+public class SharedTagActivity extends AppCompatActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback{
 
-public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback{
+    private String ptagID;
+    private String puserID;
 
     private GoogleMap mMap;
     private Marker currentMarker = null;
@@ -89,31 +92,41 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
-    // (참고로 Toast에서는 Context가 필요했습니다.)
+
+    //거리계산
+    LatLng previousPosition = null;
+    Marker addedMarker = null;
+    int tracking = 0;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_shared_tag);
+
+        ImageView volumbtn = (ImageView) findViewById(R.id.volumbtn22);
 
 
+        Intent gintent = getIntent();
+        String tagid = gintent.getStringExtra("tagID");
+        String tagName = gintent.getStringExtra("tagName");
+        String userid = gintent.getStringExtra("userID");
+
+        TextView titleTagName = findViewById(R.id.sharedtitleTagName12);
+        titleTagName.setText(tagid);
+
+        setPuserID(userid);
+        setPtagID(tagid);
 
 
+//----- google map----------------------------------------------------------------
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.activity_home);
+        //setContentView(R.layout.activity_tag);
 
-        ImageButton comebackbtn2 = (ImageButton) findViewById(R.id.comebackbtn1);
-        comebackbtn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent (HomeActivity.this, MainScreenActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-          locationRequest = new LocationRequest()
+        locationRequest = new LocationRequest()
                 .setPriority(PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL_MS)
                 .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
@@ -129,13 +142,27 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_home_fragment);
+                .findFragmentById(R.id.nav_sharedTag_fragment);
         mapFragment.getMapAsync(this);
 
-    }
+//google map---------------------------------------------------------------------------------------
 
+
+
+
+        volumbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+
+
+    }
+//------------------------------------------------------------------------------------------ google map
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         Log.d(TAG, "onMapReady :");
@@ -145,17 +172,52 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 서울로 이동
         //setDefaultLocation();
-        for (int idx = 0; idx < 2; idx++) {
-            // 1. 마커 옵션 설정 (만드는 과정)
-            MarkerOptions makerOptions = new MarkerOptions();
-            makerOptions // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
-                    .position(new LatLng(37.20850 + idx*0.001, 127.07990))
-                    .title("마커" + idx*0.001); // 타이틀.
+        Response.Listener<String> responseListener2 = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    if (success) {
+                        String strlatitude = jsonObject.getString("latitude");
+                        String strlongitude = jsonObject.getString("longitude");
+                        String tagName = jsonObject.getString("tagName");
+                        if(!strlongitude.equals(null) && !strlatitude.equals(null)) {
+                            float latitude = Float.parseFloat(strlatitude);
+                            float longitude = Float.parseFloat(strlongitude);
 
-            // 2. 마커 생성 (마커를 나타냄)
-            mMap.addMarker(makerOptions);
-        }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.20850, 127.07990),15));
+                            MarkerOptions makerOptions = new MarkerOptions();
+                            makerOptions // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
+                                    .position(new LatLng(latitude, longitude))
+                                    .title(tagName); // 타이틀.
+
+                            // 2. 마커 생성 (마커를 나타냄)
+                            mMap.addMarker(makerOptions);
+
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 15));
+                            LatLng latLng = new LatLng(latitude, longitude);
+
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude),15));
+
+                            double distance = SphericalUtil.computeDistanceBetween(currentPosition, latLng);
+                            TextView showdistance = findViewById(R.id.distanceShowtxt);
+                            String distancestr = Double.toString(distance);
+                            showdistance.setText(distancestr);
+                        }
+                    } else {
+
+                        return;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        String tagID = getPtagID();
+        GetTagLocationRequest getTagLocationRequest = new GetTagLocationRequest(tagID, responseListener2);
+        RequestQueue queue3 = Volley.newRequestQueue(SharedTagActivity.this);
+        queue3.add(getTagLocationRequest);
+            // 1. 마커 옵션 설정 (만드는 과정)
 
 
 
@@ -193,7 +255,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onClick(View view) {
 
                         // 3-3. 사용자게에 퍼미션 요청을 합니다. 요청 결과는 onRequestPermissionResult에서 수신됩니다.
-                        ActivityCompat.requestPermissions( HomeActivity.this, REQUIRED_PERMISSIONS,
+                        ActivityCompat.requestPermissions( SharedTagActivity.this, REQUIRED_PERMISSIONS,
                                 PERMISSIONS_REQUEST_CODE);
                     }
                 }).show();
@@ -207,7 +269,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
         }
-
 
 
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -235,10 +296,9 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 location = locationList.get(locationList.size() - 1);
                 //location = locationList.get(0);
 
-                currentPosition
-                        = new LatLng(location.getLatitude(), location.getLongitude());
+                currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
-
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()),15));
                 String markerTitle = getCurrentAddress(currentPosition);
                 String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                         + " 경도:" + String.valueOf(location.getLongitude());
@@ -247,7 +307,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
                 //현재 위치에 마커 생성하고 이동
-                //setCurrentLocation(location, markerTitle, markerSnippet);
+                setCurrentLocation(location, markerTitle, markerSnippet);
 
                 mCurrentLocatiion = location;
             }
@@ -380,7 +440,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
+/*
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(currentLatLng);
         markerOptions.title(markerTitle);
@@ -389,7 +449,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         currentMarker = mMap.addMarker(markerOptions);
-
+*/
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
         mMap.moveCamera(cameraUpdate);
 
@@ -510,7 +570,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     //여기부터는 GPS 활성화를 위한 메소드들
     private void showDialogForLocationServiceSetting() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(SharedTagActivity.this);
         builder.setTitle("위치 서비스 비활성화");
         builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n"
                 + "위치 설정을 수정하실래요?");
@@ -560,5 +620,18 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private class PRIORITY_HIGH_ACCURACY {
+    }
+    public String getPuserID(){
+        return puserID;
+    }
+    public void setPuserID(String puserID){
+        this.puserID = puserID;
+    }
+
+    public String getPtagID(){
+        return ptagID;
+    }
+    public void setPtagID(String ptagID){
+        this.ptagID = ptagID;
     }
 }
