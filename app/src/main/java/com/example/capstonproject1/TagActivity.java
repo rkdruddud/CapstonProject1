@@ -122,6 +122,8 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
         String tagName = gintent.getStringExtra("tagName");
         String userid = gintent.getStringExtra("userID");
 
+
+        TextView sharUsertext = findViewById(R.id.shareUserName);
         TextView titleTagName = findViewById(R.id.sharedtitleTagName12);
         titleTagName.setText(tagName);
 
@@ -169,19 +171,23 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 //google map---------------------------------------------------------------------------------------
+
+        sharUsertext.setText(userid);
+
+
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    JSONObject jsonObject1 = new JSONObject(response);
-                    boolean success = jsonObject1.getBoolean("success");
+                    JSONObject jsonObject12 = new JSONObject(response);
+                    boolean success = jsonObject12.getBoolean("success");
 
                     if(success){
 
-                        int length = jsonObject1.length();
+                        int length = jsonObject12.length();
                         for(int i =0; i< length-1; i++) {
 
-                            String friendID = jsonObject1.getString(String.valueOf(i));
+                            String friendID = jsonObject12.getString(String.valueOf(i));
 
                             Response.Listener<String> responseListener = new Response.Listener<String>() {
                                 @Override
@@ -192,7 +198,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
                                         if(success){
                                             String friendName = jsonObject1.getString("userName");
-
+                                            Log.d("friendName : ", friendName);
                                             adapter.addItem(new ShareFriendListItem(R.drawable.ic_baseline_person_24, friendName));
                                             adapter.notifyItemRangeRemoved(0,1);
 

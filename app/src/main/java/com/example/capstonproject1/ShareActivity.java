@@ -105,7 +105,9 @@ public class ShareActivity extends AppCompatActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
 
-                                            //데이터베이스에 공유하는 친구 저장
+
+                                            String friendName=adapter.items.get(position).FriendName;
+                                            Log.d("FriendName : " , friendName);
                                             Response.Listener<String> responseListener = new Response.Listener<String>() {
                                                 @Override
                                                 public void onResponse(String response) {
@@ -114,6 +116,29 @@ public class ShareActivity extends AppCompatActivity {
                                                         boolean success = jsonObject.getBoolean("success");
                                                         if (success) {
 
+                                                            String FgetfriendID = jsonObject.getString("userID");
+                                                            Log.d("FgetfriendID : " , FgetfriendID);
+                                                            //데이터베이스에 공유하는 친구 저장
+                                                            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                                                @Override
+                                                                public void onResponse(String response) {
+                                                                    try {
+                                                                        JSONObject jsonObject = new JSONObject(response);
+                                                                        boolean success = jsonObject.getBoolean("success");
+                                                                        if (success) {
+
+
+                                                                        } else {
+                                                                        }
+                                                                    } catch (JSONException e) {
+                                                                        e.printStackTrace();
+                                                                    }
+                                                                }
+                                                            };
+
+                                                            AddShareFriendRequest addShareFriendRequest = new AddShareFriendRequest(userID, tagID, FgetfriendID, responseListener);
+                                                            RequestQueue queue = Volley.newRequestQueue(ShareActivity.this);
+                                                            queue.add(addShareFriendRequest);
 
                                                         } else {
                                                         }
@@ -122,11 +147,10 @@ public class ShareActivity extends AppCompatActivity {
                                                     }
                                                 }
                                             };
-
-                                            AddShareFriendRequest addShareFriendRequest = new AddShareFriendRequest(userID, tagID, friendID, responseListener);
+                                            Log.d("FriendName : " , friendName);
+                                            SearchByUserNameRequest searchByUserNameRequest = new SearchByUserNameRequest(friendName, responseListener);
                                             RequestQueue queue = Volley.newRequestQueue(ShareActivity.this);
-                                            queue.add(addShareFriendRequest);
-
+                                            queue.add(searchByUserNameRequest);
 
                                         }
                                     });
