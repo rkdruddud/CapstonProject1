@@ -19,6 +19,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.strictmode.FragmentStrictMode;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -60,6 +62,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import app.akexorcist.bluetotohspp.library.BluetoothSPP;
+
 public class TagActivity extends AppCompatActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback{
 
     DrawerLayout drawerLayout2;
@@ -69,6 +73,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
     RecyclerView TagShareFriendList;
     ShareFriendListAdapter adapter;
 
+    private BluetoothSPP bt;
 
     private String ptagID;
     private String puserID;
@@ -122,7 +127,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
         String tagName = gintent.getStringExtra("tagName");
         String userid = gintent.getStringExtra("userID");
 
-
+        TextView distancetxt = findViewById(R.id.distanceShowtxt);
         TextView sharUsertext = findViewById(R.id.shareUserName);
         TextView titleTagName = findViewById(R.id.sharedtitleTagName12);
         titleTagName.setText(tagName);
@@ -144,6 +149,107 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
         setPuserID(userid);
         setPtagID(tagid);
+
+//----- bluetooth--------------------------------------------------------------------
+
+
+
+        Response.Listener<String> responseListener2 = new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response){
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    if(success){
+
+                        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() { //데이터 수신
+
+
+                            public void onDataReceived(byte[] data, String message) {
+                                String[] array = message.split(",");
+                                if(array[0].equals("$GPGGA")) {
+                                    String lat1 = array[2].substring(0,2);
+                                    String lat2 = array[2].substring(2);
+                                    String lon1 = array[4].substring(0,3);
+                                    String lon2 = array[4].substring(3);
+                                    double LatF = Double.parseDouble(lat1) + Double.parseDouble(lat2)/60;
+                                    float LongF = Float.parseFloat(lon1) + Float.parseFloat(lon2)/60;
+
+                                    String latitude = Double.toString(LatF);
+                                    String longitude = Float.toString(LongF);
+                                    String tagID = bt.getConnectedDeviceAddress();
+
+                                    MarkerOptions markerOptions = new MarkerOptions();
+                                    markerOptions.position(new LatLng(LatF,LongF));
+
+                                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                        @Override
+                                        public boolean onMarkerClick(Marker marker) {
+                                            String tagClickID = marker.getId();
+                                            LatLng tagClickPos = marker.getPosition();
+
+
+                                            if ( (marker != null) && tracking == 1 ) {
+                                                double radius = 500; // 500m distance.
+
+                                                double distance = SphericalUtil.computeDistanceBetween(currentPosition, marker.getPosition());
+
+                                                if ((distance < radius) && (!previousPosition.equals(currentPosition))) {
+
+                                                    distancetxt.setText(distance + "m");
+                                                }
+                                            }
+
+                                            distancetxt.setText("");
+                                            return false;
+                                        }
+                                    });
+                                    Response.Listener<String> responseListener = new Response.Listener<String>(){
+                                        @Override
+                                        public void onResponse(String response){
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(response);
+                                                boolean success = jsonObject.getBoolean("success");
+                                                if(success){
+
+
+                                                }else{
+                                                    Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
+                                                    return;
+                                                }
+                                            }catch (JSONException e){
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    };
+
+
+                                    AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest(tagID,latitude ,longitude,  responseListener);
+                                    RequestQueue queue4 = Volley.newRequestQueue(TagActivity.this);
+                                    queue4.add(addTagLocationRequest);
+                                    //AddTagLocation Request 클래스 사용
+                                    //ㅏ데이터베이스에 넘겨주는 코드
+                                }
+
+
+                            }
+                        });
+
+
+
+
+                    }else{
+
+                        return;
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        SearchTagLocationRequest searchTagLocationRequest = new SearchTagLocationRequest(getPtagID(), responseListener2);
+        RequestQueue queue2 = Volley.newRequestQueue(TagActivity.this);
+        queue2.add(searchTagLocationRequest);
 
 
 //----- google map----------------------------------------------------------------
@@ -169,6 +275,64 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_Taginfo_fragment);
         mapFragment.getMapAsync(this);
+
+
+        Response.Listener<String> responseListener8 = new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response){
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    if(success){
+                        String lat = jsonObject.getString("latitude");
+                        String lon = jsonObject.getString("longitude");
+                        Float flatitude = Float.parseFloat(lat);
+                        Float flongitude = Float.parseFloat(lon);
+
+
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(new LatLng(flatitude,flongitude));
+
+                        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker) {
+                               String tagClickID = marker.getId();
+                               LatLng tagClickPos = marker.getPosition();
+
+
+              if ( (marker != null) && tracking == 1 ) {
+                   double radius = 500; // 500m distance.
+
+                   double distance = SphericalUtil.computeDistanceBetween(currentPosition, marker.getPosition());
+
+                   if ((distance < radius) && (!previousPosition.equals(currentPosition))) {
+
+                       distancetxt.setText(distance + "m");
+                   }
+               }
+
+              distancetxt.setText("");
+              return false;
+                            }
+                        });
+
+
+                    }else{
+
+                        return;
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Intent sintent = getIntent();
+        String tagID2 = sintent.getStringExtra("tagID");
+
+        SearchTagLocationRequest searchTagLocationRequest2 = new SearchTagLocationRequest(tagID2, responseListener8);
+        RequestQueue queue6 = Volley.newRequestQueue(TagActivity.this);
+        queue6.add(searchTagLocationRequest2);
 
 //google map---------------------------------------------------------------------------------------
 

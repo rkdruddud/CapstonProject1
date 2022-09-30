@@ -182,6 +182,8 @@ public class SharedTagActivity extends AppCompatActivity implements OnMapReadyCa
                         String strlatitude = jsonObject.getString("latitude");
                         String strlongitude = jsonObject.getString("longitude");
                         String tagName = jsonObject.getString("tagName");
+                        TextView titleTagName = findViewById(R.id.sharedtitleTagName12);
+                        titleTagName.setText(tagName);
                         if(!strlongitude.equals(null) && !strlatitude.equals(null)) {
                             float latitude = Float.parseFloat(strlatitude);
                             float longitude = Float.parseFloat(strlongitude);

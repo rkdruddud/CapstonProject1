@@ -26,6 +26,7 @@ public class TagListActivity extends AppCompatActivity {
     TagListAdapter adapter;
     private String ptagID;
     private String puserID;
+    private String ptagName;
 
 
 
@@ -49,8 +50,8 @@ public class TagListActivity extends AppCompatActivity {
         String userID = gintent.getStringExtra("userID");
 
         String tagID = gintent.getStringExtra("tagID");
-
-
+        String tagName = gintent.getStringExtra("tagName");
+        setPtagName(tagName);
 
         Response.Listener<String> responseListener6 = new Response.Listener<String>() {
             @Override
@@ -65,7 +66,10 @@ public class TagListActivity extends AppCompatActivity {
                             //String tagName = jsonObject.getString("tagName");
                             String ggtagID = jsonObject.getString(String.valueOf(i));
                             setPtagID(ggtagID);
+
                             Log.d("ggtagID",ggtagID);
+                            String gggtagName = getPtagName();
+
                             adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24, ggtagID, "공유 받는 중"));
                             adapter.notifyItemRangeRemoved(0, 1);
 
@@ -100,6 +104,7 @@ public class TagListActivity extends AppCompatActivity {
                                                         if (success) {
                                                             String gtagID = jsonObject.getString("tagID");
                                                             setPtagID(gtagID);
+
 
                                                         } else {
 
@@ -138,6 +143,31 @@ public class TagListActivity extends AppCompatActivity {
                                             DeleteTaginfoRequest deleteTaginfoRequest = new DeleteTaginfoRequest(userID ,pptagID, responseListener);
                                             RequestQueue queue = Volley.newRequestQueue(TagListActivity.this);
                                             queue.add(deleteTaginfoRequest);
+
+                                            //UserTag 정보 삭제
+                                            Response.Listener<String> responseListener7 = new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try {
+                                                        JSONObject jsonObject = new JSONObject(response);
+                                                        boolean success = jsonObject.getBoolean("success");
+                                                        if (success) {
+
+
+                                                        } else {
+
+                                                            return;
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            };
+
+                                            DeleteUserTagRowRequest deleteUserTagRowRequest = new DeleteUserTagRowRequest(userID ,pptagID, responseListener7);
+                                            RequestQueue queue7 = Volley.newRequestQueue(TagListActivity.this);
+                                            queue.add(deleteUserTagRowRequest);
+
 
                                             //TagLocation 의 정보 삭제
                                             Response.Listener<String> responseListener1 = new Response.Listener<String>() {
@@ -215,7 +245,7 @@ public class TagListActivity extends AppCompatActivity {
                 }
             }
         };
-        Log.d("userID", userID);
+
         SearchShareFriendTagIDRequest searchShareFriendTagIDRequest = new SearchShareFriendTagIDRequest(userID, responseListener6);
         RequestQueue queue4 = Volley.newRequestQueue(TagListActivity.this);
         queue4.add(searchShareFriendTagIDRequest);
@@ -234,8 +264,7 @@ public class TagListActivity extends AppCompatActivity {
                         int length = jsonObject1.length();
                         for(int i =0; i< length-1; i++) {
                             String tagID = jsonObject1.getString(String.valueOf(i));
-                            adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,tagID, "개인용"));
-                            adapter.notifyItemRangeRemoved(0,1);
+
 
                             setPuserID(userID);
                             Response.Listener<String> responseListener3 = new Response.Listener<String>() {
@@ -246,6 +275,7 @@ public class TagListActivity extends AppCompatActivity {
                                         boolean success = jsonObject.getBoolean("success");
                                         if (success) {
                                             String tagName = jsonObject.getString("tagName");
+                                            setPtagName(tagName);
 
                                         } else {
 
@@ -260,6 +290,9 @@ public class TagListActivity extends AppCompatActivity {
                             SearchTagNameRequest searchTagNameRequest = new SearchTagNameRequest(tagID, responseListener3);
                             RequestQueue queue6 = Volley.newRequestQueue(TagListActivity.this);
                             queue6.add(searchTagNameRequest);
+
+                            adapter.addItem(new TagListItem(R.drawable.ic_baseline_contactless_24,tagName, "개인용"));
+                            adapter.notifyItemRangeRemoved(0,1);
 
                             adapter.setOnItemLongClickListener(new TagListAdapter.OnItemLongClickListener() {
                                 @Override
@@ -439,7 +472,7 @@ public class TagListActivity extends AppCompatActivity {
     public void onBackPressed() {
         Intent bintent = new Intent(TagListActivity.this, MainScreenActivity.class);
         String ggguserID = getPuserID();
-        Log.d("ggguserID",ggguserID);
+
         bintent.putExtra("userID",ggguserID);
         TagListActivity.this.startActivity(bintent);
         finish();
@@ -457,6 +490,13 @@ public class TagListActivity extends AppCompatActivity {
     }
     public void setPuserID(String puserID){
         this.puserID = puserID;
+    }
+
+    public String getPtagName(){
+        return ptagName;
+    }
+    public void setPtagName(String ptagName){
+        this.ptagName = ptagName;
     }
 
 

@@ -43,11 +43,11 @@ public class PersonalTagActivity extends AppCompatActivity {
         setLatitude(glatitude);
         setLongitude(glongitude);
 
-        String tagName = tagname.getText().toString();
+
         String tagID = tagid.getText().toString();
 
         tagid.setText(gtagID);
-        tagid.setText(gtagID);
+
 
         searchTagbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,6 @@ public class PersonalTagActivity extends AppCompatActivity {
         registerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Response.Listener<String> responseListener = new Response.Listener<String>(){
                     @Override
                     public void onResponse(String response){
@@ -72,9 +71,10 @@ public class PersonalTagActivity extends AppCompatActivity {
 
 
                             if(success){
-
-
-
+                                String latitude1 = jsonObject.getString("latitude");
+                                String longitude1 = jsonObject.getString("longitude");
+                                setLatitude(latitude1);
+                                setLongitude(longitude1);
                                 Response.Listener<String> responseListener = new Response.Listener<String>(){
                                     @Override
                                     public void onResponse(String response){
@@ -84,13 +84,15 @@ public class PersonalTagActivity extends AppCompatActivity {
 
 
                                             if(success){
-                                                String latitude1 = jsonObject.getString("latitude");
-                                                String longitude1 = jsonObject.getString("longitude");
-                                                setLatitude(latitude1);
-                                                setLongitude(longitude1);
+
+                                                Toast.makeText(getApplicationContext(),"태그 등록 성공",Toast.LENGTH_SHORT).show();
+                                                String tagName = tagname.getText().toString();
+                                                Intent nintent = new Intent(PersonalTagActivity.this, TagListActivity.class);
+                                                nintent.putExtra("tagName",tagName);
+                                                startActivity(nintent);
 
                                             }else{
-
+                                                Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
                                         }catch (JSONException e){
@@ -99,18 +101,14 @@ public class PersonalTagActivity extends AppCompatActivity {
                                     }
                                 };
 
-                                GetTagLocationRequest getTagLocationRequest = new GetTagLocationRequest( gtagID, responseListener);
+                                String tagName = tagname.getText().toString();
+
+                                AddTagRequest addTagRequest = new AddTagRequest( userID, tagName, gtagID, latitude1, longitude1, responseListener);
                                 RequestQueue queue = Volley.newRequestQueue(PersonalTagActivity.this);
-                                queue.add(getTagLocationRequest);
-
-                                Toast.makeText(getApplicationContext(),"태그 등록 성공",Toast.LENGTH_SHORT).show();
-
-                                Intent nintent = new Intent(PersonalTagActivity.this, TagListActivity.class);
-
-                                startActivity(nintent);
+                                queue.add(addTagRequest);
 
                             }else{
-                                Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
+
                                 return;
                             }
                         }catch (JSONException e){
@@ -118,11 +116,10 @@ public class PersonalTagActivity extends AppCompatActivity {
                         }
                     }
                 };
-                String getlatitude = getLatitude();
-                String getlongitude = getLongitude();
-                AddTagRequest addTagRequest = new AddTagRequest( userID, tagName, gtagID, getlatitude, getlongitude, responseListener);
+
+                GetTagLocationRequest getTagLocationRequest = new GetTagLocationRequest( gtagID, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(PersonalTagActivity.this);
-                queue.add(addTagRequest);
+                queue.add(getTagLocationRequest);
 
 
                 Intent rintent = new Intent(PersonalTagActivity.this, MainScreenActivity.class);

@@ -25,6 +25,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationCallback;
@@ -43,6 +46,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -229,6 +235,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 서울로 이동
         //setDefaultLocation();
+
+
+
+
         for (int idx = 0; idx < 2; idx++) {
             // 1. 마커 옵션 설정 (만드는 과정)
             MarkerOptions makerOptions = new MarkerOptions();
@@ -239,7 +249,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             // 2. 마커 생성 (마커를 나타냄)
             mMap.addMarker(makerOptions);
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.20850, 127.07990),15));
+       // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.20850, 127.07990),15));
 
 
 
