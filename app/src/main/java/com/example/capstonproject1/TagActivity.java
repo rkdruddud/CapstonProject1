@@ -1,5 +1,7 @@
 package com.example.capstonproject1;
 
+import static app.akexorcist.bluetotohspp.library.BluetoothState.REQUEST_ENABLE_BT;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +19,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -63,8 +67,9 @@ import java.util.List;
 import java.util.Locale;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
+import app.akexorcist.bluetotohspp.library.BluetoothService;
 
-public class TagActivity extends AppCompatActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback{
+public class TagActivity extends AppCompatActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
     DrawerLayout drawerLayout2;
     NavigationView navigationView;
@@ -93,7 +98,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
     // 앱을 실행하기 위해 필요한 퍼미션을 정의합니다.
-    String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};  // 외부 저장소
+    String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};  // 외부 저장소
 
 
     Location mCurrentLocatiion;
@@ -113,13 +118,12 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
     int tracking = 0;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tag);
 
-        ImageView volumbtn = (ImageView) findViewById(R.id.volumbtn);
+
 
 
         Intent gintent = getIntent();
@@ -135,7 +139,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
         LinearLayout container = findViewById(R.id.itemLayout12);
         drawerLayout2 = findViewById(R.id.drawerLayoutTag);
         navigationView = findViewById(R.id.navigationView);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout2, R.string.tag_menu_Open,R.string.tag_menu_Close);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout2, R.string.tag_menu_Open, R.string.tag_menu_Close);
 
         Button sharebtn = findViewById(R.id.Sharebtn3);
 
@@ -153,6 +157,99 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 //----- bluetooth--------------------------------------------------------------------
 
 
+
+
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        Intent intent;
+
+        if (mBluetoothAdapter.isEnabled()) {
+            // 블루투스 관련 실행 진행
+        } else {
+            // 블루투스 활성화 하도록
+            intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(intent, 1);
+        }
+
+
+
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("블루투스에 대한 액세스가 필요합니다");
+                builder.setMessage("어플리케이션이 블루투스를 감지 할 수 있도록 위치 정보 액세스 권한을 부여하십시오.");
+                builder.setPositiveButton(android.R.string.ok, null);
+
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        requestPermissions(new String[]{Manifest.permission.BLUETOOTH_SCAN}, 2 );
+                    }
+                });
+                builder.show();
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("블루투스에 대한 액세스가 필요합니다");
+                builder.setMessage("어플리케이션이 블루투스를 연결 할 수 있도록 위치 정보 액세스 권한을 부여하십시오.");
+                builder.setPositiveButton(android.R.string.ok, null);
+
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 3 );
+                    }
+                });
+                builder.show();
+            }
+        }
+
+        bt = new BluetoothSPP(this); //Initializing
+        try {
+
+            if (!bt.isBluetoothAvailable()) { //블루투스 사용 불가
+                Toast.makeText(getApplicationContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        } catch (SecurityException e){
+            Toast.makeText(getApplicationContext(), "앱 사용 권한을 허용해주세요", Toast.LENGTH_SHORT).show();
+
+        }
+
+        String[] permission_list = {
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        };
+
+        ActivityCompat.requestPermissions(TagActivity.this, permission_list,  1);
+
+
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }else {
+            // 블루투스 활성화 하도록
+          Intent aaintent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(aaintent, 1);
+        }
 
         Response.Listener<String> responseListener2 = new Response.Listener<String>(){
             @Override
@@ -187,6 +284,32 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                                         public boolean onMarkerClick(Marker marker) {
                                             String tagClickID = marker.getId();
                                             LatLng tagClickPos = marker.getPosition();
+
+                                            Response.Listener<String> responseListener = new Response.Listener<String>(){
+                                                @Override
+                                                public void onResponse(String response){
+                                                    try {
+                                                        JSONObject jsonObject = new JSONObject(response);
+                                                        boolean success = jsonObject.getBoolean("success");
+
+                                                        if(success){
+
+                                                        }else{
+                                                            Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
+                                                            return;
+                                                        }
+                                                    }catch (JSONException e){
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            };
+
+                                            String userId = getPuserID();
+                                            String gtagID = getPtagID();
+
+                                            AddTagRequest addTagRequest = new AddTagRequest( userId, tagName, gtagID, latitude, longitude, responseListener);
+                                            RequestQueue queue = Volley.newRequestQueue(TagActivity.this);
+                                            queue.add(addTagRequest);
 
 
                                             if ( (marker != null) && tracking == 1 ) {
@@ -465,12 +588,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        volumbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
 
 
 
@@ -482,7 +600,70 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.d(TAG, "onMapReady :");
 
         mMap = googleMap;
+        MarkerOptions makerOptions = new MarkerOptions();
+        makerOptions // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
+                .position(new LatLng(36.744, 127.0791551))
+                .title(ptagID); // 타이틀.
 
+        // 2. 마커 생성 (마커를 나타냄)
+        mMap.addMarker(makerOptions);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(36.744, 127.0791551), 15));
+        LatLng latLng = new LatLng(36.744, 127.0791551);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(36.744, 127.0791551),15));
+
+
+        double distance = SphericalUtil.computeDistanceBetween(currentPosition, latLng);
+
+        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() { //데이터 수신
+
+
+            public void onDataReceived(byte[] data, String message) {
+                String[] array = message.split(",");
+                if(array[0].equals("$GPGGA")) {
+                    String lat1 = array[2].substring(0, 2);
+                    String lat2 = array[2].substring(2);
+                    String lon1 = array[4].substring(0, 3);
+                    String lon2 = array[4].substring(3);
+                    double LatF = Double.parseDouble(lat1) + Double.parseDouble(lat2) / 60;
+                    float LongF = Float.parseFloat(lon1) + Float.parseFloat(lon2) / 60;
+
+                    String latitude = Double.toString(LatF);
+                    String longitude = Float.toString(LongF);
+                    String tagID = bt.getConnectedDeviceAddress();
+                    Log.d(TAG, "tagLatitude : " + latitude);
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(new LatLng(LatF, LongF));
+
+                    MarkerOptions makerOptions = new MarkerOptions();
+                    makerOptions // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
+                            .position(new LatLng(LatF, LongF))
+                            .title(tagID);
+
+                    makerOptions // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
+                            .position(new LatLng(LatF, LongF))
+                            .title(tagID); // 타이틀.
+
+                    // 2. 마커 생성 (마커를 나타냄)
+                    mMap.addMarker(makerOptions);
+
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LatF, LongF), 15));
+                    LatLng latLng = new LatLng(LatF, LongF);
+
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(LatF, LongF),15));
+                    double distance = SphericalUtil.computeDistanceBetween(currentPosition, latLng);
+                    TextView showdistance = findViewById(R.id.distanceShowtxt);
+                    String distancestr = Double.toString(distance);
+                    showdistance.setText(distancestr);
+
+                    //AddTagLocation Request 클래스 사용
+                    //ㅏ데이터베이스에 넘겨주는 코드
+                }
+
+
+            }
+        });
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 서울로 이동
         //setDefaultLocation();
@@ -495,23 +676,25 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                     if (success) {
                         String strlatitude = jsonObject.getString("latitude");
                         String strlongitude = jsonObject.getString("longitude");
-                        String tagName = jsonObject.getString("tagName");
+
                       //  if(!strlongitude.equals(null) && !strlatitude.equals(null)) {
                             float latitude = Float.parseFloat(strlatitude);
                             float longitude = Float.parseFloat(strlongitude);
 
+
+
                             MarkerOptions makerOptions = new MarkerOptions();
                             makerOptions // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
-                                    .position(new LatLng(latitude, longitude))
-                                    .title(tagName); // 타이틀.
+                                    .position(new LatLng(36.734504, 127.0791551))
+                                    .title(ptagID); // 타이틀.
 
                             // 2. 마커 생성 (마커를 나타냄)
                             mMap.addMarker(makerOptions);
 
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 15));
-                            LatLng latLng = new LatLng(latitude, longitude);
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(36.734504, 127.0791551), 15));
+                            LatLng latLng = new LatLng(36.734504, 127.0791551);
 
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude),15));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(36.734504, 127.0791551),15));
                             double distance = SphericalUtil.computeDistanceBetween(currentPosition, latLng);
                             TextView showdistance = findViewById(R.id.distanceShowtxt);
                             String distancestr = Double.toString(distance);
@@ -686,7 +869,15 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
     }
-
+    public void setup() {
+        ImageView volumbtn = (ImageView) findViewById(R.id.volumbtn);
+        volumbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bt.send("o",true);
+            }
+        });
+    }
 
     @Override
     protected void onStop() {

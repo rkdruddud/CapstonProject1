@@ -138,7 +138,32 @@ public class TagSearchAddActivity extends AppCompatActivity {
                     String longitude = Float.toString(LongF);
                     String tagID = bt.getConnectedDeviceAddress();
 
+                    Response.Listener<String> responseListener2 = new Response.Listener<String>(){
+                        @Override
+                        public void onResponse(String response){
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                boolean success = jsonObject.getBoolean("success");
 
+
+                                if(success){
+
+
+
+                                }else{
+
+                                    return;
+                                }
+                            }catch (JSONException e){
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+
+                    AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest( tagID, latitude, longitude, responseListener2);
+                    RequestQueue queue2 = Volley.newRequestQueue(TagSearchAddActivity.this);
+                    queue2.add(addTagLocationRequest);
 
                     setPlatitude(latitude);
                     setPlongitude(longitude);
@@ -169,9 +194,9 @@ public class TagSearchAddActivity extends AppCompatActivity {
 
                     String ddtagID = getPtagID();
 
-                    AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest(ddtagID,glatitude ,glongitude,  responseListener);
+                    AddTagLocationRequest addTagLocationRequest33 = new AddTagLocationRequest(ddtagID,glatitude ,glongitude,  responseListener);
                     RequestQueue queue4 = Volley.newRequestQueue(TagSearchAddActivity.this);
-                    queue4.add(addTagLocationRequest);
+                    queue4.add(addTagLocationRequest33);
                     //AddTagLocation Request 클래스 사용
                     //ㅏ데이터베이스에 넘겨주는 코드
                 }
@@ -222,35 +247,7 @@ public class TagSearchAddActivity extends AppCompatActivity {
                 RequestQueue queue2 = Volley.newRequestQueue(TagSearchAddActivity.this);
                 queue2.add(addUserTagRequest);
 
-                Response.Listener<String> responseListener = new Response.Listener<String>(){
-                    @Override
-                    public void onResponse(String response){
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            if(success){
 
-
-                            }else{
-                                Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                        }catch (JSONException e){
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                //String tagId = getPtagID();
-                String glatitude = getPlatitude();
-                String glongitude = getPlongitude();
-
-                //Log.d("tagId : ",tagId);
-
-                String ddtagID = getPtagID();
-
-                AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest(ddtagID,glatitude ,glongitude,  responseListener);
-                RequestQueue queue4 = Volley.newRequestQueue(TagSearchAddActivity.this);
-                queue4.add(addTagLocationRequest);
 
                 Toast.makeText(getApplicationContext(), "Connected to " + name + "\n" + address, Toast.LENGTH_SHORT).show();
 
@@ -332,32 +329,7 @@ public class TagSearchAddActivity extends AppCompatActivity {
                 queue.add(addTagRequest);
 
 
-                Response.Listener<String> responseListener2 = new Response.Listener<String>(){
-                    @Override
-                    public void onResponse(String response){
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
 
-
-                            if(success){
-
-
-
-                            }else{
-
-                                return;
-                            }
-                        }catch (JSONException e){
-                            e.printStackTrace();
-                        }
-                    }
-                };
-
-
-                AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest( gtagID, getlatitude, getlongitude, responseListener2);
-                RequestQueue queue2 = Volley.newRequestQueue(TagSearchAddActivity.this);
-                queue2.add(addTagLocationRequest);
 
 
                 Intent nintent = new Intent(TagSearchAddActivity.this, TagListActivity.class);
