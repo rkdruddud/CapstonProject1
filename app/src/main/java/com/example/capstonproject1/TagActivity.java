@@ -174,9 +174,6 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
 
-
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -233,27 +230,122 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
         ActivityCompat.requestPermissions(TagActivity.this, permission_list,  1);
 
-
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }else {
+        }
+        else {
             // 블루투스 활성화 하도록
           Intent aaintent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(aaintent, 1);
         }
 
-        Response.Listener<String> responseListener2 = new Response.Listener<String>(){
+        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() { //데이터 수신
+
+
+            public void onDataReceived(byte[] data, String message) {
+                String[] array = message.split(",");
+                if(array[0].equals("$GPGGA")) {
+                    String lat1 = array[2].substring(0,2);
+                    String lat2 = array[2].substring(2);
+                    String lon1 = array[4].substring(0,3);
+                    String lon2 = array[4].substring(3);
+                    double LatF = Double.parseDouble(lat1) + Double.parseDouble(lat2)/60;
+                    float LongF = Float.parseFloat(lon1) + Float.parseFloat(lon2)/60;
+
+                    setFlatitude((float)LatF);
+                    setFlongitude(LongF);
+
+                    String latitude = Double.toString(LatF);
+                    String longitude = Float.toString(LongF);
+                    String tagID = bt.getConnectedDeviceAddress();
+
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(new LatLng(LatF,LongF));
+
+
+                    // 마커 찍는 함수 넣기
+
+                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            String tagClickID = marker.getId();
+                            LatLng tagClickPos = marker.getPosition();
+
+                            Response.Listener<String> responseListener = new Response.Listener<String>(){
+                                @Override
+                                public void onResponse(String response){
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        boolean success = jsonObject.getBoolean("success");
+
+                                        if(success){
+
+                                        }else{
+                                            Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                    }catch (JSONException e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+
+                            String userId = getPuserID();
+                            String gtagID = getPtagID();
+
+                            AddTagRequest addTagRequest = new AddTagRequest( userId, tagName, gtagID, latitude, longitude, responseListener);
+                            RequestQueue queue = Volley.newRequestQueue(TagActivity.this);
+                            queue.add(addTagRequest);
+
+
+                            if ( (marker != null) && tracking == 1 ) {
+                                double radius = 500; // 500m distance.
+
+                                double distance = SphericalUtil.computeDistanceBetween(currentPosition, marker.getPosition());
+
+                                if ((distance < radius) && (!previousPosition.equals(currentPosition))) {
+
+                                    distancetxt.setText(distance + "m");
+                                }
+                            }
+
+                            distancetxt.setText("");
+                            return false;
+                        }
+                    });
+                    Response.Listener<String> responseListener = new Response.Listener<String>(){
+                        @Override
+                        public void onResponse(String response){
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                boolean success = jsonObject.getBoolean("success");
+                                if(success){
+
+
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }catch (JSONException e){
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+
+                    AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest(tagID,latitude ,longitude,  responseListener);
+                    RequestQueue queue4 = Volley.newRequestQueue(TagActivity.this);
+                    queue4.add(addTagLocationRequest);
+                    //AddTagLocation Request 클래스 사용
+                    //ㅏ데이터베이스에 넘겨주는 코드
+                }
+
+
+            }
+        });
+
+      /*  Response.Listener<String> responseListener2 = new Response.Listener<String>(){
             @Override
             public void onResponse(String response){
                 try {
@@ -261,110 +353,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                     boolean success = jsonObject.getBoolean("success");
                     if(success){
 
-                        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() { //데이터 수신
 
-
-                            public void onDataReceived(byte[] data, String message) {
-                                String[] array = message.split(",");
-                                if(array[0].equals("$GPGGA")) {
-                                    String lat1 = array[2].substring(0,2);
-                                    String lat2 = array[2].substring(2);
-                                    String lon1 = array[4].substring(0,3);
-                                    String lon2 = array[4].substring(3);
-                                    double LatF = Double.parseDouble(lat1) + Double.parseDouble(lat2)/60;
-                                    float LongF = Float.parseFloat(lon1) + Float.parseFloat(lon2)/60;
-
-                                    setFlatitude((float)LatF);
-                                    setFlongitude(LongF);
-
-                                    String latitude = Double.toString(LatF);
-                                    String longitude = Float.toString(LongF);
-                                    String tagID = bt.getConnectedDeviceAddress();
-
-                                    MarkerOptions markerOptions = new MarkerOptions();
-                                    markerOptions.position(new LatLng(LatF,LongF));
-
-
-                                    // 마커 찍는 함수 넣기
-
-                                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                                        @Override
-                                        public boolean onMarkerClick(Marker marker) {
-                                            String tagClickID = marker.getId();
-                                            LatLng tagClickPos = marker.getPosition();
-
-                                            Response.Listener<String> responseListener = new Response.Listener<String>(){
-                                                @Override
-                                                public void onResponse(String response){
-                                                    try {
-                                                        JSONObject jsonObject = new JSONObject(response);
-                                                        boolean success = jsonObject.getBoolean("success");
-
-                                                        if(success){
-
-                                                        }else{
-                                                            Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
-                                                            return;
-                                                        }
-                                                    }catch (JSONException e){
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            };
-
-                                            String userId = getPuserID();
-                                            String gtagID = getPtagID();
-
-                                            AddTagRequest addTagRequest = new AddTagRequest( userId, tagName, gtagID, latitude, longitude, responseListener);
-                                            RequestQueue queue = Volley.newRequestQueue(TagActivity.this);
-                                            queue.add(addTagRequest);
-
-
-                                            if ( (marker != null) && tracking == 1 ) {
-                                                double radius = 500; // 500m distance.
-
-                                                double distance = SphericalUtil.computeDistanceBetween(currentPosition, marker.getPosition());
-
-                                                if ((distance < radius) && (!previousPosition.equals(currentPosition))) {
-
-                                                    distancetxt.setText(distance + "m");
-                                                }
-                                            }
-
-                                            distancetxt.setText("");
-                                            return false;
-                                        }
-                                    });
-                                    Response.Listener<String> responseListener = new Response.Listener<String>(){
-                                        @Override
-                                        public void onResponse(String response){
-                                            try {
-                                                JSONObject jsonObject = new JSONObject(response);
-                                                boolean success = jsonObject.getBoolean("success");
-                                                if(success){
-
-
-                                                }else{
-                                                    Toast.makeText(getApplicationContext(),"태그 등록 실패",Toast.LENGTH_SHORT).show();
-                                                    return;
-                                                }
-                                            }catch (JSONException e){
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    };
-
-
-                                    AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest(tagID,latitude ,longitude,  responseListener);
-                                    RequestQueue queue4 = Volley.newRequestQueue(TagActivity.this);
-                                    queue4.add(addTagLocationRequest);
-                                    //AddTagLocation Request 클래스 사용
-                                    //ㅏ데이터베이스에 넘겨주는 코드
-                                }
-
-
-                            }
-                        });
 
 
 
@@ -380,7 +369,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
         };
         SearchTagLocationRequest searchTagLocationRequest = new SearchTagLocationRequest(getPtagID(), responseListener2);
         RequestQueue queue2 = Volley.newRequestQueue(TagActivity.this);
-        queue2.add(searchTagLocationRequest);
+        queue2.add(searchTagLocationRequest);*/
 
 
 //----- google map----------------------------------------------------------------
