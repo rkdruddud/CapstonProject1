@@ -82,6 +82,8 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private String ptagID;
     private String puserID;
+    private Float flatitude;
+    private Float flongitude;
 
     private GoogleMap mMap;
     private Marker currentMarker = null;
@@ -272,12 +274,18 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                                     double LatF = Double.parseDouble(lat1) + Double.parseDouble(lat2)/60;
                                     float LongF = Float.parseFloat(lon1) + Float.parseFloat(lon2)/60;
 
+                                    setFlatitude((float)LatF);
+                                    setFlongitude(LongF);
+
                                     String latitude = Double.toString(LatF);
                                     String longitude = Float.toString(LongF);
                                     String tagID = bt.getConnectedDeviceAddress();
 
                                     MarkerOptions markerOptions = new MarkerOptions();
                                     markerOptions.position(new LatLng(LatF,LongF));
+
+
+                                    // 마커 찍는 함수 넣기
 
                                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                         @Override
@@ -607,6 +615,15 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // 2. 마커 생성 (마커를 나타냄)
         mMap.addMarker(makerOptions);
+
+        MarkerOptions makerOptions2 = new MarkerOptions();
+        makerOptions2 // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
+                .position(new LatLng(getFlatitude(), getFlongitude()))
+                .title(ptagID); // 타이틀.
+
+        // 2. 마커 생성 (마커를 나타냄)
+        mMap.addMarker(makerOptions);
+        mMap.addMarker(makerOptions2);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(36.744, 127.0791551), 15));
         LatLng latLng = new LatLng(36.744, 127.0791551);
@@ -1138,5 +1155,19 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
     }
     public void setPtagID(String ptagID){
         this.ptagID = ptagID;
+    }
+
+    public Float getFlatitude(){
+        return flatitude;
+    }
+    public void setFlatitude(Float flatitude){
+        this.flatitude = flatitude;
+    }
+
+    public Float getFlongitude(){
+        return flongitude;
+    }
+    public void setFlongitude(Float flongitude){
+        this.flongitude = flongitude;
     }
 }
