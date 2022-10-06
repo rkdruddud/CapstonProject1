@@ -23,7 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
-import android.view.Gravity;
+
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -33,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.strictmode.FragmentStrictMode;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,13 +66,13 @@ import java.util.List;
 import java.util.Locale;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
-import app.akexorcist.bluetotohspp.library.BluetoothService;
+
 
 public class TagActivity extends AppCompatActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
     DrawerLayout drawerLayout2;
     NavigationView navigationView;
-    Toolbar toolbar20;
+
     ActionBarDrawerToggle actionBarDrawerToggle;
     RecyclerView TagShareFriendList;
     ShareFriendListAdapter adapter;
@@ -158,21 +157,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
 //----- bluetooth--------------------------------------------------------------------
 
-
-
-
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        Intent intent;
-
-        if (mBluetoothAdapter.isEnabled()) {
-            // 블루투스 관련 실행 진행
-        } else {
-            // 블루투스 활성화 하도록
-            intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(intent, 1);
-        }
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
@@ -192,24 +177,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                 builder.show();
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-                builder.setTitle("블루투스에 대한 액세스가 필요합니다");
-                builder.setMessage("어플리케이션이 블루투스를 연결 할 수 있도록 위치 정보 액세스 권한을 부여하십시오.");
-                builder.setPositiveButton(android.R.string.ok, null);
-
-                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 3 );
-                    }
-                });
-                builder.show();
-            }
-        }
 
         bt = new BluetoothSPP(this); //Initializing
         try {
@@ -264,6 +232,30 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                     markerOptions.position(new LatLng(LatF,LongF));
 
 
+                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            String tagClickID = marker.getId();
+                            LatLng tagClickPos = marker.getPosition();
+
+
+                            if ( (marker != null) && tracking == 1 ) {
+                                double radius = 500; // 500m distance.
+
+                                double distance = SphericalUtil.computeDistanceBetween(currentPosition, marker.getPosition());
+
+                                if ((distance < radius) && (!previousPosition.equals(currentPosition))) {
+
+                                    distancetxt.setText(distance + "m");
+                                }
+                            }
+
+                            distancetxt.setText("");
+                            return false;
+                        }
+                    });
+
+
                     // 마커 찍는 함수 넣기
 
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -292,7 +284,8 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                             };
 
                             String userId = getPuserID();
-                            String gtagID = getPtagID();
+
+                            String gtagID = bt.getConnectedDeviceAddress();
 
                             AddTagRequest addTagRequest = new AddTagRequest( userId, tagName, gtagID, latitude, longitude, responseListener);
                             RequestQueue queue = Volley.newRequestQueue(TagActivity.this);
@@ -333,8 +326,8 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
                     };
 
-
-                    AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest(tagID,latitude ,longitude,  responseListener);
+                    String ggtagID = bt.getConnectedDeviceAddress();
+                    AddTagLocationRequest addTagLocationRequest = new AddTagLocationRequest(ggtagID,latitude ,longitude,  responseListener);
                     RequestQueue queue4 = Volley.newRequestQueue(TagActivity.this);
                     queue4.add(addTagLocationRequest);
                     //AddTagLocation Request 클래스 사용
@@ -410,31 +403,6 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                         Float flongitude = Float.parseFloat(lon);
 
 
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(new LatLng(flatitude,flongitude));
-
-                        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                            @Override
-                            public boolean onMarkerClick(Marker marker) {
-                               String tagClickID = marker.getId();
-                               LatLng tagClickPos = marker.getPosition();
-
-
-              if ( (marker != null) && tracking == 1 ) {
-                   double radius = 500; // 500m distance.
-
-                   double distance = SphericalUtil.computeDistanceBetween(currentPosition, marker.getPosition());
-
-                   if ((distance < radius) && (!previousPosition.equals(currentPosition))) {
-
-                       distancetxt.setText(distance + "m");
-                   }
-               }
-
-              distancetxt.setText("");
-              return false;
-                            }
-                        });
 
 
                     }else{
@@ -449,8 +417,8 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
 
         Intent sintent = getIntent();
         String tagID2 = sintent.getStringExtra("tagID");
-
-        SearchTagLocationRequest searchTagLocationRequest2 = new SearchTagLocationRequest(tagID2, responseListener8);
+        String tagID22 = bt.getConnectedDeviceAddress();
+        SearchTagLocationRequest searchTagLocationRequest2 = new SearchTagLocationRequest(tagID22, responseListener8);
         RequestQueue queue6 = Volley.newRequestQueue(TagActivity.this);
         queue6.add(searchTagLocationRequest2);
 
@@ -526,7 +494,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                                                                 }
                                                             };
                                                             String tagID = getPtagID();
-                                                            Log.d("tagID", tagID);
+                                                           // Log.d("tagID", tagID);
                                                             StopShareFriendRequest stopShareFriendRequest = new StopShareFriendRequest(friendID, tagID, responseListener2);
                                                             RequestQueue queue2 = Volley.newRequestQueue(TagActivity.this);
                                                             queue2.add(stopShareFriendRequest);
@@ -599,28 +567,21 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap = googleMap;
         MarkerOptions makerOptions = new MarkerOptions();
         makerOptions // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
-                .position(new LatLng(36.744, 127.0791551))
+                .position(new LatLng(36.7345128, 127.0791511))
                 .title(ptagID); // 타이틀.
 
         // 2. 마커 생성 (마커를 나타냄)
         mMap.addMarker(makerOptions);
 
-        MarkerOptions makerOptions2 = new MarkerOptions();
-        makerOptions2 // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
-                .position(new LatLng(getFlatitude(), getFlongitude()))
-                .title(ptagID); // 타이틀.
-
-        // 2. 마커 생성 (마커를 나타냄)
-        mMap.addMarker(makerOptions);
-        mMap.addMarker(makerOptions2);
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(36.744, 127.0791551), 15));
-        LatLng latLng = new LatLng(36.744, 127.0791551);
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(36.744, 127.0791551),15));
 
 
-        double distance = SphericalUtil.computeDistanceBetween(currentPosition, latLng);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(36.7345128, 127.0791511), 15));
+        LatLng latLng = new LatLng(36.7345128, 127.0791511);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(36.7345128, 127.0791511),15));
+
+
+       // double distance = SphericalUtil.computeDistanceBetween(currentPosition, latLng);
 
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() { //데이터 수신
 
@@ -647,9 +608,6 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
                             .position(new LatLng(LatF, LongF))
                             .title(tagID);
 
-                    makerOptions // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
-                            .position(new LatLng(LatF, LongF))
-                            .title(tagID); // 타이틀.
 
                     // 2. 마커 생성 (마커를 나타냄)
                     mMap.addMarker(makerOptions);
@@ -970,7 +928,7 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
     public void setDefaultLocation() {
 
         //디폴트 위치, Seoul
-        LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
+        LatLng DEFAULT_LOCATION = new LatLng(36.7345128, 127.0791511);
         String markerTitle = "서울";
         String markerSnippet = "위치 퍼미션과 GPS 활성 요부 확인하세요";
 
