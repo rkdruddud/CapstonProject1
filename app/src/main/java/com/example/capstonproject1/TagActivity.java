@@ -835,7 +835,8 @@ public class TagActivity extends AppCompatActivity implements OnMapReadyCallback
     }
     public void setup() {
         ImageView volumbtn = (ImageView) findViewById(R.id.volumbtn);
-        volumbtn.setOnClickListener(new View.OnClickListener() {
+        Button volumbtn2 = findViewById(R.id.button567890);
+        volumbtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bt.send("o",true);

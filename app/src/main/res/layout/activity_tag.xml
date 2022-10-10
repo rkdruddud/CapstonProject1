@@ -86,6 +86,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.912"
             app:srcCompat="@drawable/ic_baseline_volume_up_24" />
+
+        <Button
+            android:id="@+id/button567890"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#F4F0F0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.133"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/nav_Taginfo_fragment"
+            app:layout_constraintVertical_bias="0.932" />
         />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

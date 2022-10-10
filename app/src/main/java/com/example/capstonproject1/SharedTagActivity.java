@@ -168,7 +168,13 @@ public class SharedTagActivity extends AppCompatActivity implements OnMapReadyCa
         Log.d(TAG, "onMapReady :");
 
         mMap = googleMap;
+        MarkerOptions makerOptions = new MarkerOptions();
+        makerOptions // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
+                .position(new LatLng(36.7345128, 127.0791511))
+                .title(ptagID); // 타이틀.
 
+        // 2. 마커 생성 (마커를 나타냄)
+        mMap.addMarker(makerOptions);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(36.7345128, 127.0791511), 15));
         LatLng latLng = new LatLng(36.7345128, 127.0791511);
 
